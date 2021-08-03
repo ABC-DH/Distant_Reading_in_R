@@ -65,6 +65,11 @@ my_df[1:3,1] # the same!!
 my_df[1,]
 my_df[3,]
 
+# accessing variables in a meaningful way
+my_df$author == "Dante"
+which(my_df$author == "Dante")
+my_df$nationality[which(my_df$author == "Dante")]
+
 ### 3. Manipulating variables
 my_first_vector+1
 my_first_vector[2]+1
