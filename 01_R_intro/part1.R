@@ -75,17 +75,14 @@ my_first_vector+1
 my_first_vector[2]+1
 my_second_vector+1 # this produces an error!!
 
-# the functions syntax
+# manipulating strings
 paste(my_string, "?")
-nchar(my_string)
 strsplit(my_string, " ")
 strsplit(my_string, " ")[[1]]
 unlist(strsplit(my_string, " ")) # the same! (in this specific case)
 
-my_second_vector
+# saving to a new variable (for exploration)
 my_third_vector <- unlist(strsplit(my_string, " "))
-my_third_vector == my_second_vector
-
 table(my_third_vector)
 sort(table(my_third_vector))
 sort(table(my_third_vector), decreasing = T)
