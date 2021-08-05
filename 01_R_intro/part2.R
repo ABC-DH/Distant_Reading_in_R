@@ -66,7 +66,7 @@ while(n <= 10){
 }
 # be careful with while loops, because you might create never-ending loops!
 
-# the lapply function
+# the sapply/lapply functions
 # (with a simple example: increase the values in one vector)
 my_vector <- 1:10
 my_vector
@@ -77,14 +77,17 @@ for(i in 1:10){
 }
 my_vector
 
-# it is (almost) the same of:
+# it is the same of this sapply function:
 my_vector <- 1:10
-my_vector <- lapply(my_vector, function(x) x+1)
+my_vector <- sapply(my_vector, function(x) x+1)
 my_vector
-# you just have to "unlist" it
-my_vector <- unlist(my_vector)
-my_vector
-# why use lapply? Because it is faster than a loop
+
+# if you are working with lists, then you can use lapply
+my_list <- list(1:10, 2:20)
+my_list <- lapply(my_list, function(x) x+1)
+my_list
+
+# why use sapply/lapply? Because they are faster than a loop
 
 # advanced loop: read files in a folder
 # first, find all file names
