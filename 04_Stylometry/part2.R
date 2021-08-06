@@ -34,7 +34,7 @@ for(i in 1:length(file_list)){
   print(i)
 }
 
-### find the texts written by one author (e.g. Scudery)
+### find the texts written by one author (e.g. Woolf)
 Chosen_texts <- which(grepl("Woolf", names(my_texts)))
 # This is a typical example of an "embedded" R function
 # the "grepl" function checks if the string "Woolf" is present in the names of the "plays_text" list

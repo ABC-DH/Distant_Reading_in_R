@@ -47,15 +47,22 @@ file_list
 my_texts <- list()
 ### and run a loop on all the files
 for(i in 1:length(file_list)){
-  # read text (with stylo's function)
-  loaded_file <- readLines(file_list[i], warn = F)
-  loaded_file <- paste(loaded_file, collapse = "\n")
-  # If we want to run stylo on the texts now saved in the list, we need to "tokenize" them (i.e. split them into single words)
+  # read text (for .txt files)
+  if(grepl(pattern = ".txt", x = file_list[i])){
+    loaded_file <- readLines(file_list[i], warn = F)
+    loaded_file <- paste(loaded_file, collapse = "\n")
+  }
+  # in case it is an xml file, let's delete the markup
+  if(grepl(pattern = ".xml", x = file_list[i])){
+    loaded_file <- scan(file_list[i], what = "char", encoding = "utf-8", sep = "\n", quiet = TRUE)
+    loaded_file <- delete.markup(loaded_file, markup.type = "xml")
+  }
+  # If we want to run stylo on the texts, we need to "tokenize" them (i.e. split them into single words)
   # There is a function in the "stylo" package that does it:
   my_texts[[i]] <- stylo::txt.to.words.ext(loaded_file, corpus.lang = "English")
   # then add correct names to the different texts in the list
   # (we can re-use the names saved in the list_files variable, by deleting the "corpus/" at the beginning)
-  names(my_texts)[i] <- gsub(pattern = "corpus/|.txt", replacement = "", x = file_list[i])
+  names(my_texts)[i] <- gsub(pattern = "corpus/|.txt|.xml", replacement = "", x = file_list[i])
   # print progress
   print(i)
 }
