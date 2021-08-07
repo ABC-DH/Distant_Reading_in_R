@@ -9,6 +9,8 @@
 # required packages:
 # install.packages("stylo")
 # install.packages("quanteda")
+# install.packages("quanteda.textstats")
+# install.packages("quanteda.textplots")
 
 ### 1. Zeta Analysis
 
@@ -65,11 +67,12 @@ oppose(primary.corpus = primary_set, secondary.corpus = secondary_set)
 # in the graphical interface, you can leave things as they are
 # please choose the "Words" visualization
 
-
 ### 2. Log-likelihood
 ### with the "quanteda" package
 
 library(quanteda)
+library(quanteda.textstats)
+library(quanteda.textplots)
 
 ### First, data has to be prepared (by repeating the procedure above)
 
@@ -105,21 +108,23 @@ quanteda_texts <- paste(my_texts[Chosen_texts], collapse = "\n")
 quanteda_texts[2] <- paste(my_texts[-Chosen_texts], collapse = "\n")
 names(quanteda_texts) <- c("Woolf", "Others")
 
-### Then quanteda gets in action:
-### first, it transforms the corpus into a document-feature matrix 
-document_feature_matrix <- dfm(quanteda_texts, groups = names(quanteda_texts), remove_punct = T)
+### Here quanteda gets in action
+# first, it tokenizes the text 
+quanteda_texts <- tokens(quanteda_texts, remove_punct = T)
+
+# second, it transforms the corpus into a document-feature matrix 
+document_feature_matrix <- dfm(quanteda_texts)
 # note that the "grouping" is based on the names of the corpus, i.e. "Woolf" and "Others" 
 
-### Then it calculates the keyness for each word
-### choosing as a target the documents with the "Woolf" name
-### and using as a measure the "log-likelihood ratio" method ("lr")
+# third, it calculates the keyness for each word
+# choosing as a target the documents with the "Woolf" name
+# and using as a measure the "log-likelihood ratio" method ("lr")
 keyness_results <- textstat_keyness(document_feature_matrix, target = "Woolf", measure = "lr")
 
-### Finally, we plot the results
+# Finally, we plot the results
 textplot_keyness(keyness_results, n = 20)
 
-### ...and save them as png, for a confrontation with the "Zeta analysis"
+# ...and save them as png, for a comparison with the "Zeta analysis"
 png(filename = "Woolf_LogLikelihood.png", height = 2000, width = 3000, res = 300)
 textplot_keyness(keyness_results, n = 20)
 dev.off()
-
