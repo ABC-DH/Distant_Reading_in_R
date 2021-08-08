@@ -1,0 +1,29 @@
+id,label,weight,color,shape,border,shadow,title
+10a,Munch,5,purple,circle,black,TRUE,<p><b> Munch </b><br>Node !</p>
+10p,Palestina,4,green,ellipse,black,TRUE,<p><b> Palestina </b><br>Node !</p>
+11a,San Sebastián,2,purple,circle,black,TRUE,<p><b> San Sebastian </b><br>Node !</p>
+11p,España,32,green,ellipse,black,TRUE,<p><b> España </b><br>Node !</p>
+1a,Arquitectura greca,17,purple,circle,black,TRUE,<p><b> Arquitectura greca </b><br>Node !</p>
+1p,Azores,2,green,ellipse,black,TRUE,<p><b> Azores </b><br>Node !</p>
+1t,Dedicatoria,2,orange,square,black,TRUE,<p><b> Dedicatoria </b><br>Node !</p>
+2a,Céramica micénica,1,purple,circle,black,TRUE,<p><b> Céramica micénica </b><br>Node !</p>
+2p,Chile,2,green,ellipse,black,TRUE,<p><b> Chile </b><br>Node !</p>
+2t,Ecologia,2,orange,square,black,TRUE,<p><b> Ecologia </b><br>Node !</p>
+3a,Escher,1,purple,circle,black,TRUE,<p><b> Escher </b><br>Node !</p>
+3p,China,1,green,ellipse,black,TRUE,<p><b> China </b><br>Node !</p>
+3t,Economia,8,orange,square,black,TRUE,<p><b> Economia </b><br>Node !</p>
+4a,Goya,1,purple,circle,black,TRUE,<p><b> Goya </b><br>Node !</p>
+4p,Egipto,2,green,ellipse,black,TRUE,<p><b> Egipto </b><br>Node !</p>
+4t,Guerra,6,orange,square,black,TRUE,<p><b> Guerra </b><br>Node !</p>
+5a,Guernica,19,purple,circle,black,TRUE,<p><b> Guernica </b><br>Node !</p>
+5p,Estados Unidos,2,green,ellipse,black,TRUE,<p><b> Estados Unidos </b><br>Node !</p>
+5t,Historia&Sociedad,3,orange,square,black,TRUE,<p><b> Historia&Sociedad </b><br>Node !</p>
+6a,Leonardo da Vinci,4,purple,circle,black,TRUE,<p><b> Leonardo da Vinci </b><br>Node !</p>
+6p,Fukushima,12,green,ellipse,black,TRUE,<p><b> Fukushima </b><br>Node !</p>
+6t,Migracion,5,orange,square,black,TRUE,<p><b> Migracion </b><br>Node !</p>
+7p,Grecia,2,green,ellipse,black,TRUE,<p><b> Grecia </b><br>Node !</p>
+8a,Matisse,1,purple,circle,black,TRUE,<p><b> Matisse </b><br>Node !</p>
+8p,Islandia,2,green,ellipse,black,TRUE,<p><b> Islandia </b><br>Node !</p>
+8t,Sexismo,2,orange,square,black,TRUE,<p><b> Sexismo </b><br>Node !</p>
+9a,Miro,1,purple,circle,black,TRUE,<p><b> Miro </b><br>Node !</p>
+9p,Mediterraneo,3,green,ellipse,black,TRUE,<p><b> Mediterraneo </b><br>Node !</p>
