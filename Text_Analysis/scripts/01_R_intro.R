@@ -164,7 +164,7 @@ cat("The cat is on the table", file = "Cat.txt")
 
 ### Your Turn (5) - start
 
-# read another .txt file in the "samples" folder
+# read another .txt file in the "corpus" folder
 # and split it into single words 
 my_text <- readLines("")
 strsplit()
