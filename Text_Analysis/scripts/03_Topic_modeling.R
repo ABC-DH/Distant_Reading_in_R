@@ -165,7 +165,7 @@ library(ggwordcloud)
 # prepare the plot
 p1 <- ggplot(
   top_words,
-  aes(label = words, size = weights)) +
+  aes(label = term, size = weight)) +
   geom_text_wordcloud_area() +
   scale_size_area(max_size = 20) +
   theme_minimal() +
@@ -175,7 +175,7 @@ p1 <- ggplot(
 p1
 
 # save it
-ggsave(p1, filename = "Topics_wordcloud.png", scale = 2.5)
+ggsave(p1, filename = "Topics_wordcloud.png", scale = 4)
 
 ### Your Turn (1) - start
 
@@ -183,8 +183,8 @@ ggsave(p1, filename = "Topics_wordcloud.png", scale = 2.5)
 # do the topic modeling on a different corpus
 # this one for example: https://github.com/computationalstylistics/100_english_novels 
 
-# remember that once downloaded the files, you need to change the working directory
-# to a directory that contains "corpus" in itself
+# option 1. you can download the files and simply add them to the "corpus" directory in this project
+# option 2. you can create a new project starting from the "100_english_novels" GitHub repo, copy this script there and run it
 
 
 ### Your Turn (1) - end
