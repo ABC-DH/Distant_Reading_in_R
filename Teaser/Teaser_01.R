@@ -133,11 +133,6 @@ plot(
 # ...it is still too noisy: we'll need to use some filters
 simple_plot(syuzhet_vector, title = "Sentiment arc")
 
-# we can save the plot as a png file
-png("my_simple_plot.png", height = 900, width = 1600, res = 100)
-simple_plot(syuzhet_vector, title = "Sentiment arc")
-dev.off()
-
 # we can also look at the basic emotions (Plutchik)
 syuzhet_emotions <- get_nrc_sentiment(sentences_vector)
 
@@ -215,7 +210,7 @@ for(i in 1:length(tm_corpus)){
 # preparation of texts for topic model
 text.instances <- 
   mallet.import(text.array = my_texts, 
-                stoplist.file = "resources/stopwords-en.stopwords", # this removes the stopwords (ie. function words) 
+                stoplist = "resources/stopwords-en.stopwords", # this removes the stopwords (ie. function words) 
                 id.array = names(my_texts))
 
 # define all variables (better not to change alpha and beta)
@@ -241,11 +236,8 @@ for(i in 1:num_topics){
   words.per.topic <- mallet.top.words(topic.model, word.weights = topic.words[i,], num.top.words = 20)
   words.per.topic$topic <- i
   top_words <- rbind(top_words, words.per.topic)
-  firstwords[i] <- paste(words.per.topic$words[1:5], collapse = " ")
+  firstwords[i] <- paste(words.per.topic$term[1:5], collapse = " ")
 }
-
-# visualize the table
-View(top_words)
 
 # visualize the first five words per topic
 names(firstwords) <- paste("Topic", 1:length(firstwords))
@@ -262,6 +254,34 @@ rownames(doc.topics) <- names(my_texts) # to make them look better, remove "corp
 # visualize an heatmap and save it to a file
 png(filename = "heatmap.png", width = 4000, height = 4000)
 heatmap(doc.topics, margins = c(25,25), cexRow = 2, cexCol = 2)
+dev.off()
+
+# simplify the visualization 
+# start by changing variable type
+doc.topics <- as.data.frame(doc.topics)
+
+# create a variable that contains the groups (i.e. the books)
+groups_tmp <- rownames(doc.topics)
+groups_tmp <- strsplit(groups_tmp, "_")
+groups_tmp <- sapply(groups_tmp, function(x) paste(x[1:3], collapse = "_"))
+
+# add it to the dataframe
+doc.topics$group <- groups_tmp
+
+# calculate mean for each topic probability per group
+doc.topics.simple <- doc.topics %>% 
+  group_by(group) %>%
+  summarise(across(everything(), mean))
+
+# re-convert the format to matrix
+groups_tmp <- doc.topics.simple$group
+doc.topics.simple$group <- NULL
+doc.topics.simple <- as.matrix(doc.topics.simple)
+rownames(doc.topics.simple) <- groups_tmp
+
+# visualize another heatmap and save it to a file
+png(filename = "heatmap_simple.png", width = 1000, height = 1000)
+heatmap(doc.topics.simple, margins = c(25,25), cexRow = 2, cexCol = 2)
 dev.off()
 
 ### 4.
