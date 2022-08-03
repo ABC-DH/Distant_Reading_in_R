@@ -12,8 +12,8 @@
 
 # required packages:
 # install.packages("mallet")
-# install.packages("ggwordcloud")
 # install.packages("tidyverse")
+# install.packages("ggwordcloud")
 
 # load the packages
 # remember that you will have to do it every time you restart R
