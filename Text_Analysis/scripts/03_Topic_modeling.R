@@ -13,6 +13,7 @@
 # required packages:
 # install.packages("mallet")
 # install.packages("ggwordcloud")
+# install.packages("tidyverse")
 
 # load the packages
 # remember that you will have to do it every time you restart R
@@ -128,6 +129,8 @@ heatmap(doc.topics, margins = c(25,25), cexRow = 2, cexCol = 2)
 dev.off()
 
 # simplify the visualization 
+library(tidyverse)
+
 # start by changing variable type
 doc.topics <- as.data.frame(doc.topics)
 
