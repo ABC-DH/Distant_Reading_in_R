@@ -15,13 +15,16 @@
 # install.packages("tidyverse")
 # install.packages("ggwordcloud")
 
+### Define variables
+# here you define the variables for your topic modeling
+num_topics <- 10 # number of topics
+num_iterations <- 200 # number of iterations
+len_split <- 10000 # length of the split texts (they will be the actual documents to work on)
+
+### Processing starts
 # load the packages
 # remember that you will have to do it every time you restart R
 library(mallet) 
-
-# Define variables
-num_topics <- 10 # number of topics
-len_split <- 10000 # length of the split texts (they will be the actual documents to work on)
 
 # Prepare the corpus
 tm_corpus <- list()
@@ -88,9 +91,11 @@ topic.model <- MalletLDA(num.topics=num_topics, alpha.sum = 1, beta = 0.1)
 # load documents for topic modeling
 topic.model$loadDocuments(text.instances)
 
-# create the topic models
+# prepare topic models' features (again, you can leave the values as they are)
 topic.model$setAlphaOptimization(20, 50) # this is for optimization
-topic.model$train(200)
+
+# create the topic models
+topic.model$train(num_iterations)
 
 # calculate topic per document
 doc.topics <- mallet.doc.topics(topic.model, smoothed=TRUE, normalized=TRUE)
