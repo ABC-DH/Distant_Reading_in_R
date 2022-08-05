@@ -1,1 +1,2 @@
 SentiArt lexicon downloaded and converted from: https://github.com/matinho13/SentiArt/blob/main/250kSentiArt_EN.xlsx
+LatinAffectus2 lexicon downloaded from: https://github.com/CIRCSE/Latin_Sentiment_Lexicons
