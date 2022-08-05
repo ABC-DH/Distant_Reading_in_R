@@ -13,14 +13,13 @@
 # required packages:
 # install.packages("udpipe")
 # install.packages("tidyverse")
-# install.packages("udpipe")
 # install.packages("syuzhet")
 
 ### 1. Wiktor's latin analysis
 
 library(udpipe)
-library(syuzhet)
 library(tidyverse)
+library(syuzhet)
 
 # process latin text
 text <- "Ego sum felix sicut annuum"
