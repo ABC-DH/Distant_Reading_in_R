@@ -19,4 +19,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## LatinAffectus2
 
-These resources are licensed under a (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License)[http://creativecommons.org/licenses/by-nc-sa/4.0/].
+These resources are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
