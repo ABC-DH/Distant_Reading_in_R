@@ -12,9 +12,6 @@
 
 # required packages:
 # install.packages("stylo")
-# install.packages("quanteda")
-# install.packages("quanteda.textstats")
-# install.packages("quanteda.textplots")
 
 ### 1. Delta Analysis
 
@@ -45,14 +42,14 @@ stylo()
 
 # also, note that each analysis has generated a .csv file that can be opened with Gephi (for network analysis)
 
-### It can be useful to save the texts into R variables, so we can run multiple analyses on them without having to read them all the times
+# It can be useful to save the texts into R variables, so we can run multiple analyses on them without having to read them all the times
 
 # First, select all files in the "corpus" folder
 file_list <- list.files("corpus", full.names = T)
 file_list
-### then prepare an empty list for the texts 
+# then prepare an empty list for the texts 
 my_texts <- list()
-### and run a loop on all the files
+# and run a loop on all the files
 for(i in 1:length(file_list)){
   # read text (for .txt files)
   if(grepl(pattern = ".txt", x = file_list[i])){
@@ -79,8 +76,8 @@ names(my_texts)
 head(my_texts[[1]])
 head(my_texts[[2]])
 
-### Now everything is ready to run stylo on the texts that we have saved in the R list
-### We can even call stylo by deactivating the GUI, and setting all the features via R code
+# Now everything is ready to run stylo on the texts that we have saved in the R list
+# We can even call stylo by deactivating the GUI, and setting all the features via R code
 results_stylo <- stylo(gui = FALSE, 
                        corpus.lang="English", 
                        analysis.type="CA", 
@@ -90,31 +87,31 @@ results_stylo <- stylo(gui = FALSE,
                        parsed.corpus = my_texts)
 # Note: the results of the analysis have been saved in a variable called "stylo_results"
 
-### Explore
+# Explore
 results_stylo$distance.table
 # Note: the "$" simbol is used to see the sub-section in a structured variable
 
-### see the name of the texts in the distance table
+# see the name of the texts in the distance table
 rownames(results_stylo$distance.table)
 
-### see a portion of the distance table
-### for example the one of the first text in our selection
+# see a portion of the distance table
+# for example the one of the first text in our selection
 results_stylo$distance.table[1,]
 
-### which one is the "closest" text?
+# which one is the "closest" text?
 sort(results_stylo$distance.table[1,])
 
-### see a table with the frequency of all words
+# see a table with the frequency of all words
 results_stylo$frequencies.0.culling
 # rows are the texts, columns the words
 
-### produce a list of the most frequent words
+# produce a list of the most frequent words
 colnames(results_stylo$frequencies.0.culling)
 
-### which is the position in the table of the word "lights"
+# which is the position in the table of the word "lights"
 lights_position <- which(colnames(results_stylo$frequencies.0.culling) == "lights")
 
-### which author uses "lights" more frequently?
+# which author uses "lights" more frequently?
 sort(results_stylo$frequencies.0.culling[,lights_position], decreasing = T)
 
 ### Your Turn (1) - start
@@ -132,23 +129,23 @@ sort(results_stylo$frequencies.0.culling[,lights_position], decreasing = T)
 
 ### 2. Zeta Analysis
 
-### find the texts written by one author (e.g. Woolf)
+# find the texts written by one author (e.g. Woolf)
 Chosen_texts <- which(grepl("Woolf", names(my_texts)))
 Chosen_texts
 
-### We use the "oppose" function, still in the "stylo" package,
-### that looks for the most distinctive words.
-### The method it uses is known as "Zeta Analysis"
-### The corpus should be divided in two parts:
-### A "primary set" where we have the texts of interest;
-### A "secondary set" to be compared with
+# We use the "oppose" function, still in the "stylo" package,
+# that looks for the most distinctive words.
+# The method it uses is known as "Zeta Analysis"
+# The corpus should be divided in two parts:
+# A "primary set" where we have the texts of interest;
+# A "secondary set" to be compared with
 
-### Our primary set are the texts by Woolf
+# Our primary set are the texts by Woolf
 primary_set <- my_texts[Chosen_texts]
-### Our secondary set are the texts by all the others
+# Our secondary set are the texts by all the others
 secondary_set <- my_texts[-Chosen_texts]
 
-### now everything is ready to run an "oppose" analysis
+# now everything is ready to run an "oppose" analysis
 oppose(primary.corpus = primary_set, secondary.corpus = secondary_set)
 # in the graphical interface, you can leave things as they are
 # please choose the "Words" visualization
@@ -159,74 +156,3 @@ oppose(primary.corpus = primary_set, secondary.corpus = secondary_set)
 
 
 ### Your Turn (2) - end
-
-
-### 3. Log-likelihood
-### with the "quanteda" package
-
-library(quanteda)
-library(quanteda.textstats)
-library(quanteda.textplots)
-
-### First, data has to be prepared (by repeating the procedure above)
-
-# In this case, we do not need to tokenize the text
-# so the "my_texts" variable can be a vector, not a list 
-my_texts <- character()
-
-# and run again a loop on all the files
-for(i in 1:length(file_list)){
-  # read text (for .txt files)
-  if(grepl(pattern = ".txt", x = file_list[i])){
-    loaded_file <- readLines(file_list[i], warn = F)
-    loaded_file <- paste(loaded_file, collapse = "\n")
-  }
-  # in case it is an xml file, let's delete the markup
-  if(grepl(pattern = ".xml", x = file_list[i])){
-    loaded_file <- scan(file_list[i], what = "char", encoding = "utf-8", sep = "\n", quiet = TRUE)
-    loaded_file <- delete.markup(loaded_file, markup.type = "xml")
-  }
-  my_texts[i] <- loaded_file
-  names(my_texts)[i] <- gsub(pattern = "corpus/|.txt|.xml", replacement = "", x = file_list[i])
-  # print progress
-  print(i)
-}
-
-# We repeat the selection already done for the "oppose" function in Stylo
-Chosen_texts <- which(grepl("Woolf", names(my_texts)))
-
-# As quanteda does not look at distribution, but just at frequencies
-# we have to collapse all texts by Woolf and Others into single strings
-# by separating target and reference corpus
-quanteda_texts <- paste(my_texts[Chosen_texts], collapse = "\n")
-quanteda_texts[2] <- paste(my_texts[-Chosen_texts], collapse = "\n")
-names(quanteda_texts) <- c("Woolf", "Others")
-
-### Here quanteda gets in action
-# first, it tokenizes the text 
-quanteda_texts <- tokens(quanteda_texts, remove_punct = T)
-
-# second, it transforms the corpus into a document-feature matrix 
-document_feature_matrix <- dfm(quanteda_texts)
-# note that the "grouping" is based on the names of the corpus, i.e. "Woolf" and "Others" 
-
-# third, it calculates the keyness for each word
-# choosing as a target the documents with the "Woolf" name
-# and using as a measure the "log-likelihood ratio" method ("lr")
-keyness_results <- textstat_keyness(document_feature_matrix, target = "Woolf", measure = "lr")
-
-# Finally, we plot the results
-textplot_keyness(keyness_results, n = 20)
-
-# ...and save them as png, for a comparison with the "Zeta analysis"
-png(filename = "Woolf_LogLikelihood.png", height = 2000, width = 3000, res = 300)
-textplot_keyness(keyness_results, n = 20)
-dev.off()
-
-### Your Turn (3) - start
-
-# Run the same analyses on a different corpus
-
-
-### Your Turn (3) - end
-
