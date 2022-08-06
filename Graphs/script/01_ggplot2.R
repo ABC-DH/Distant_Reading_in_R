@@ -51,16 +51,16 @@ ggplot(data = table, aes(x= Magnesium,
        caption = "Data from library rattle.data") +
   theme_minimal()
 
-# Change the data:
+# Change the data WWII:
 
-table_example <- read.csv("data/1943.csv")
+table_ww2 <- read.csv("data/1943.csv")
 
-ggplot(data = table_example, aes(x= date,
+ggplot(data = table_ww2, aes(x= date,
                                  y=old_people,
                                  colour=authors_event,
                                  size=victims))  +
   geom_point() + 
-  labs(x="Dates of the massacres", y="Old people killed", 
+  labs(x="Dates of the massacres", y="Ederly people killed", 
        title = "Massacres during 1943 by Nazis or Fascists",
        subtitle = "Relationships bewteen the total victims and the old people",
        caption = "Data from library rattle.data") +
@@ -119,7 +119,7 @@ ggplotly(fig)
 # Change the data:
 
 fig_example <-
-  ggplot(data = table_example, aes(x= execution, y=authors_event, colour=authors_event, size=victims)) +
+  ggplot(data = table_ww2, aes(x= execution, y=authors_event, colour=authors_event, size=victims)) +
   geom_point(alpha=0.5) + 
   theme_bw()
 
