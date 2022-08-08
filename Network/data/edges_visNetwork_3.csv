@@ -1,0 +1,11 @@
+from,to,value,label,title
+8,3,10.2273936860611,Edge 1,<p>1<br>Edge Tooltip !</p>
+2,7,10.0547283288823,Edge 2,<p>2<br>Edge Tooltip !</p>
+7,2,9.02138465702788,Edge 3,<p>3<br>Edge Tooltip !</p>
+6,7,11.8920370422987,Edge 4,<p>4<br>Edge Tooltip !</p>
+1,9,9.66649999798791,Edge 5,<p>5<br>Edge Tooltip !</p>
+8,1,11.0662557889896,Edge 6,<p>6<br>Edge Tooltip !</p>
+9,5,12.0794429927385,Edge 7,<p>7<br>Edge Tooltip !</p>
+4,3,10.2382860730656,Edge 8,<p>8<br>Edge Tooltip !</p>
+6,2,10.22002358642,Edge 9,<p>9<br>Edge Tooltip !</p>
+2,9,10.2756244955603,Edge 10,<p>10<br>Edge Tooltip !</p>

@@ -1,0 +1,9 @@
+"","from","to","label","length","width","arrows","dashes","title","smooth","shadow"
+"1",2,8,"Edge 1",100,4,"to",TRUE,"Edge 1",FALSE,FALSE
+"2",5,1,"Edge 2",500,1,"from",FALSE,"Edge 2",TRUE,TRUE
+"3",1,7,"Edge 3",100,4,"middle",TRUE,"Edge 3",FALSE,FALSE
+"4",7,3,"Edge 4",500,1,"middle;to",FALSE,"Edge 4",TRUE,TRUE
+"5",10,5,"Edge 5",100,4,"to",TRUE,"Edge 5",FALSE,FALSE
+"6",6,10,"Edge 6",500,1,"from",FALSE,"Edge 6",TRUE,TRUE
+"7",3,6,"Edge 7",100,4,"middle",TRUE,"Edge 7",FALSE,FALSE
+"8",8,9,"Edge 8",500,1,"middle;to",FALSE,"Edge 8",TRUE,TRUE
