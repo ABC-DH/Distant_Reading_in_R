@@ -26,7 +26,7 @@ plot(routes_network,
 # network circle plot
 plot(routes_network,
      label = network.vertex.names(routes_network),
-     vertex.cex = sqrt(nodes$weight),
+     vertex.cex = sqrt(nodes$value),
      #mode = "circle",
      #mode = "kamadakawai",
      mode = "fruchtermanreingold",

@@ -18,6 +18,7 @@ edges <- read_csv("data/edges.csv")
 ## nodes <- data.frame(id = 1:10)
 ## edges <- data.frame(from = c(1,2,5,7,8,10), to = c(9,3,1,6,4,7))
 
+  
 # Simple interactive plot
 visNetwork(nodes, 
            edges,
