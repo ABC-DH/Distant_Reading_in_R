@@ -23,9 +23,28 @@ plot(routes_igraph,
      edge.arrow.size = 0.2)
 
 # igraph-graphopt-plot
-plot(routes_igraph, 
-     layout = layout_with_graphopt, 
-     edge.arrow.size = 0.2)
+plot(routes_igraph,
+     #nodes options
+     vertex.shape="sphere",
+     vertex.color="gold", 
+     vertex.size = 10 + sqrt(nodes$weight),
+     vertex.frame.color="gray", 
+     vertex.label.color="black",
+     vertex.label.cex=0.8, 
+     vertex.label.dist=4,
+     #edges options
+     edge.width = sqrt(nodes$weight),
+     edge.curved=0.5,
+     edge.arrow.size = 0.2,
+     #layout = layout_with_kk
+     #layout=layout_with_fr
+     #layout = layout_randomly
+     #layout = layout_with_graphopt
+     #layout=layout_in_circle
+     layout = layout.fruchterman.reingold
+     )
+
+
 
 # Load libraries
 library(tidygraph)
@@ -72,7 +91,7 @@ ggraph(routes_igraph,
        layout = "linear") + 
   geom_edge_arc(aes(width = weight), 
                 alpha = 0.8) + 
-  scale_edge_width(range = c(0.2, 2)) +
+  scale_edge_width(range = c(0.8, 2)) +
   geom_node_text(aes(label = label)) +
   labs(edge_width = "Letters") +
   theme_graph()

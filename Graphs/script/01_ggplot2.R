@@ -26,7 +26,7 @@ ggplot(data = table, aes(x= Magnesium, y=Flavanoids )) + geom_point()
 
 # Customise the graph
 ggplot(data = table, aes(x= Magnesium, 
-                        y=Flavanoids,
+                         y=Flavanoids,
                         colour=Hue,
                         size=Proline ))  +
   geom_point() + 
@@ -49,7 +49,7 @@ ggplot(data = table, aes(x= Magnesium,
        title = "Wine data set",
        subtitle = "Scatter plot",
        caption = "Data from library rattle.data") +
-  theme_minimal()
+  theme_grey()
 
 # Change the data WWII:
 
@@ -73,7 +73,7 @@ ggplot(data = table, aes(x=Alcohol)) +
 
 # Histogram_2
 ggplot(data = table, aes(x=Alcohol)) + 
-  geom_density(fill="#69b3a2", color="#e9ecef", alpha=0.7, bw=0.5) 
+  geom_density(fill="#69b3a2", color="red", alpha=0.5, bw=0.1) 
 
 # Boxplot
 ggplot(data = table, aes(y=Alcohol)) + geom_boxplot()

@@ -11,6 +11,7 @@ library(hrbrthemes)
 
 # Load dataset
 data <- read.csv("data/music.csv")
+# data <- read.csv("data/music_2.csv")
 
 f <- list(
   family = "Arial, monospace",

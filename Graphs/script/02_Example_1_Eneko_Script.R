@@ -22,7 +22,4 @@ ggplot(filter(cronologia, tematica %in% c("Dedicatoria",
            color=tematica,
            size=anno,
            fillopacity=0.9))+
-  geom_point()
-scale_color_gradient2(midpoint=mid, low="blue", mid="white",
-                          high="red", space ="Lab" )
-
+  geom_point() 

@@ -14,7 +14,7 @@ library(tidyverse)
 nodes <- read_csv("data/nodes.csv")
 edges <- read_csv("data/edges.csv")
 
-# utilise un data DataFrame
+# use a data DataFrame
 ## nodes <- data.frame(id = 1:10)
 ## edges <- data.frame(from = c(1,2,5,7,8,10), to = c(9,3,1,6,4,7))
 
