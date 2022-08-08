@@ -28,6 +28,7 @@ plot(routes_igraph,
      vertex.shape="sphere",
      vertex.color="gold", 
      vertex.size = 10 + sqrt(nodes$weight),
+     
      vertex.frame.color="gray", 
      vertex.label.color="black",
      vertex.label.cex=0.8, 
@@ -41,9 +42,14 @@ plot(routes_igraph,
      #layout = layout_randomly
      #layout = layout_with_graphopt
      #layout=layout_in_circle
-     layout = layout.fruchterman.reingold
-     )
+     layout = layout.fruchterman.reingold)
 
+# Other graph layouts: 
+#add_layout_(), component_wise(), layout_as_bipartite(), layout_as_star(), 
+#layout_as_tree(), layout_in_circle(), layout_nicely(), layout_on_grid(), 
+#layout_on_sphere(), layout_randomly(), layout_with_dh(), layout_with_fr(), 
+#layout_with_gem(), layout_with_graphopt(), layout_with_kk(), layout_with_lgl(), 
+#layout_with_sugiyama(), layout_(), merge_coords(), norm_coords(), normalize()
 
 
 # Load libraries
