@@ -10,9 +10,14 @@
 library(visNetwork)
 library(tidyverse)
 
+
+
 # Load data
 nodes <- read_csv("data/nodes.csv")
 edges <- read_csv("data/edges.csv")
+
+#nodes <- read_csv("data/NodesArte.csv")
+#edges <- read_csv("data/EdgesArte.csv")
 
 # use a data DataFrame
 ## nodes <- data.frame(id = 1:10)
