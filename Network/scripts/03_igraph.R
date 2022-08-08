@@ -32,7 +32,7 @@ plot(routes_igraph,
      vertex.frame.color="gray", 
      vertex.label.color="black",
      vertex.label.cex=0.8, 
-     vertex.label.dist=4,
+     vertex.label.dist=2,
      #edges options
      edge.width = sqrt(nodes$weight),
      edge.curved=0.5,
@@ -40,9 +40,10 @@ plot(routes_igraph,
      #layout = layout_with_kk
      #layout=layout_with_fr
      #layout = layout_randomly
-     #layout = layout_with_graphopt
+     layout = layout_with_graphopt
      #layout=layout_in_circle
-     layout = layout.fruchterman.reingold)
+     #layout = layout.fruchterman.reingold
+                                            )
 
 # Other graph layouts: 
 #add_layout_(), component_wise(), layout_as_bipartite(), layout_as_star(), 
