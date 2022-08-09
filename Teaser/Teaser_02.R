@@ -1,6 +1,7 @@
 # Libraries
 install.packages("ggplot2")
 install.packages("igraph")
+install.packages("ggridges")
 install.packages("visNetwork")
 install.packages("tidyverse")
 install.packages("leaflet")
