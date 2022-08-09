@@ -25,8 +25,8 @@ plot(routes_igraph,
 # igraph-graphopt-plot
 plot(routes_igraph,
      #nodes options
-     vertex.shape="sphere",
-     vertex.color="gold", 
+     vertex.shape="square",
+     vertex.color="red", 
      vertex.size = 10 + sqrt(nodes$value),
      
      vertex.frame.color="gray", 
@@ -40,7 +40,7 @@ plot(routes_igraph,
      #layout = layout_with_kk
      #layout=layout_with_fr
      #layout = layout_randomly
-     layout = layout_with_graphopt
+     layout = layout_in_circle
      #layout=layout_in_circle
      #layout = layout.fruchterman.reingold
                                             )

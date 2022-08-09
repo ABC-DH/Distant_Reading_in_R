@@ -103,25 +103,20 @@ visNetwork(nodes_1,
 
 library(visNetwork)
 library(tidyverse)
-nodes_3 <- read.csv("data/nodes_visNetwork_3")
-edges_3 <- read.csv("data/edges_visNetwork_3")
+nodes_3 <- read.csv("data/nodes_visNetwork_3.csv")
+edges_3 <- read.csv("data/edges_visNetwork_3.csv")
 
 # 1. HIGHLIGHT NEAREST
 visNetwork(nodes_3, edges_3, height = "500px", width = "100%") %>% 
   visOptions(highlightNearest = TRUE) %>%
   visLayout(randomSeed = 123)
 
-# 2. HIGHLIGHT NEAREST (DYNAMIC)
-visNetwork(nodes_3, edges_3, height = "500px", width = "100%") %>% 
-  visOptions(highlightNearest = list(enabled = T, degree = 2, hover = T)) %>%
-  visLayout(randomSeed = 123)
-
-#3. SELECT BY NODE ID
+#2. SELECT BY NODE ID
 visNetwork(nodes_3, edges_3, height = "500px", width = "100%") %>% 
   visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
   visLayout(randomSeed = 123)
 
-# 4.SELECT BY A COLUMN
+# 3.SELECT BY A COLUMN
 # on "authorised" column
 visNetwork(nodes_3, edges_3, height = "500px", width = "100%") %>%
   visOptions(selectedBy = "group") %>%
