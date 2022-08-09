@@ -6,7 +6,7 @@ install.packages("visNetwork")
 install.packages("tidyverse")
 install.packages("leaflet")
 install.packages("sp")
-install.packages("rgal")
+install.packages("rgdal")
 install.packages("igraph")
 
 ################################################################################
@@ -17,14 +17,14 @@ install.packages("igraph")
 library(ggridges)
 library(ggplot2)
 
-cronologia <- read.csv("data/eneko.csv")
+cronologia <- read.csv("Graphs/data/eneko.csv")
 
 # basic example
 ggplot(cronologia, aes(x = anno, y = tematica, fill = tematica)) +
   geom_density_ridges() +
   theme_ridges() + 
   theme(legend.position = "none")
-p
+
 
 ################################################################################
 ##################### NETWORK ##################################################
