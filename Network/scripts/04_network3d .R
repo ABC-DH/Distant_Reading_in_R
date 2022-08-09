@@ -8,14 +8,14 @@ library(networkD3)
 library(tidyverse)
 
 # Load data
-nodes <- read_csv("data/nodes.csv")
-edges <- read_csv("data/edges.csv")
+nodes_4 <- read_csv("data/nodes_network3d.csv")
+edges_4 <- read_csv("data/edges_network3d.csv")
 
 # Redo id numbers to have them begin at 0
-nodes_d3 <- mutate(nodes, 
+nodes_d3 <- mutate(nodes_4, 
                    id = id - 1)
 
-edges_d3 <- mutate(edges, 
+edges_d3 <- mutate(edges_4, 
                    from = from - 1, 
                    to = to - 1)
 
