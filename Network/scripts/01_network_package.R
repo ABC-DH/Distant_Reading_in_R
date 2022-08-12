@@ -27,9 +27,9 @@ plot(routes_network,
 plot(routes_network,
      label = network.vertex.names(routes_network),
      vertex.cex = sqrt(nodes$value),
-     #mode = "circle",
+     mode = "circle",
      #mode = "kamadakawai",
-     mode = "fruchtermanreingold",
+     #mode = "fruchtermanreingold",
      displaylabels = TRUE)
 
 
