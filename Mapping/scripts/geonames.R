@@ -17,21 +17,21 @@ Verona <- GNsearch(name_equals = "Verona")
 # visualize the variable
 View(Verona)
 
-# read a list of places
-my_places <- c("My home", "New York", "Verona", "Leipzig", "Papapapa da", "Paris")
-my_places
+# read a list of places (from the Network folder)
+my_places_df <- read.csv("../Network/data/nodes.csv", stringsAsFactors = F)
+my_places_df$label
 
-# initialize empty dataframe to store results
+# create empty dataframe
 my_geonames <- data.frame()
 
 # loop on all places
-for(i in 1:length(my_places)){
+for(i in 1:length(my_places_df$id)){
   
   print(i)
   # prepare result dataframe
-  tmp_df <- data.frame(text = my_places[i], stringsAsFactors = F)
+  tmp_df <- my_places_df[i,]
   # search the place
-  result_tmp <- GNsearch(name_equals = my_places[i])
+  result_tmp <- GNsearch(name_equals = my_places_df$label[i])
   # check if I have a result (I might also get an empty dataframe)
   if(length(result_tmp) == 0){
     # bind (missing) result to final dataframe and jump to next iteration
@@ -54,3 +54,6 @@ for(i in 1:length(my_places)){
 
 # visualize the result
 View(my_geonames)
+
+# save results
+write.csv(my_geonames, "../Network/data/nodes_geo.csv")
