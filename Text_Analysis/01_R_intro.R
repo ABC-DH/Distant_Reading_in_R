@@ -143,11 +143,12 @@ strsplit()
 
 ### Your Turn (4) - end
 
+
 ### 5. Reading/writing text files
 
 # printing working directory
 getwd()
-setwd("/cloud/project/scripts") # notice that this can also be done via the RStudio GUI
+setwd("/cloud/project/Text_Analysis/") # notice that this can also be done via the RStudio GUI
 getwd()
 setwd("/cloud/project")
 
@@ -169,6 +170,7 @@ my_text <- readLines("corpus/")
 strsplit()
 
 ### Your Turn (5) - end
+
 
 ### 6. Making loops
 
@@ -202,6 +204,7 @@ for(i in 1:10){
 
 ### Your Turn (6) - end
 
+
 ### 7. Functions
 
 # basic (stupid) example
@@ -222,6 +225,7 @@ my_function("Giovanni")
 
 ### Your Turn (7) - end
 
+
 ### 8. Packages
 
 # install (this should be done just once)
@@ -237,6 +241,15 @@ my_df[which(my_df$nationality == "Italian"),]
 
 # with tidyverse, you do like
 my_df %>% filter(nationality == "Italian")
+
+# or: print a nice plot
+# with base R, we did like that
+plot(my_first_vector)
+
+# with tidyverse, you can do
+ggplot(data = data.frame(x = 1:5, my_first_vector), aes(x, my_first_vector)) +
+  geom_point(shape = 5) +
+  geom_line(color = "red")
 
 
 ### 9. Cheat sheets
