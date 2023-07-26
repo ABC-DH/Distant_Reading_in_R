@@ -22,25 +22,13 @@ install.packages("stylo")
 library(udpipe)
 library(tidyverse)
 
-### Simplest example
+### Udpipe annotation
 
-# choose a text
-my_text <- "To be or not to be. That is the question."
-
-# annotate it with udpipe!
-x <- udpipe(x = my_text, object = "english")
-View(x)
-
-# of course, you can also work on different languages
-my_text <- "Nel mezzo del cammin della mia vita, mi ritrovai per una selva oscura."
-
-# annotate it with udpipe!
-x <- udpipe(x = my_text, object = "italian")
-View(x)
-
-# let's work on one entire novel
+# let's read one entire novel
 novel <- readLines('corpus/Doyle_Study_1887.txt')
+# collapse it to a single string
 text <-  paste(novel, collapse = "\n")
+# annotate it with Udpipe
 result <- udpipe(x = text, object = "english")
 
 ### Dispersion plot
@@ -49,7 +37,7 @@ result <- udpipe(x = text, object = "english")
 sherlock.v <- which(result$lemma== "Sherlock")
 
 # second, let's create a vector that represents the entire text
-w.count.v <- rep(NA, length(text))
+w.count.v <- rep(NA, length(result$token))
 
 # ...and add the appearences in the vector
 w.count.v[sherlock.v] <- 1
@@ -92,19 +80,6 @@ ggplot(data = stats[1:20,], mapping = aes(x = key, y = freq)) +
   geom_bar(stat = "identity", fill = "cadetblue") +
   labs(title = "Most occurring nouns")
 
-### Word co-occurrences
-
-# calculate cooccurrences
-# i.e., how many times words are used in the same sentence
-# to make results more meaningful, we can limit the analysis just to nouns and adjectives
-cooc1 <- cooccurrence(x = subset(result, 
-                                 upos %in% c("NOUN", "ADJ")), 
-                      term = "lemma", 
-                      group = c("doc_id", 
-                                "paragraph_id", 
-                                "sentence_id"))
-
-head(cooc1)
 
 ### 2.
 ### Sentiment analysis
@@ -254,34 +229,6 @@ rownames(doc.topics) <- names(my_texts) # to make them look better, remove "corp
 # visualize an heatmap and save it to a file
 png(filename = "heatmap.png", width = 4000, height = 4000)
 heatmap(doc.topics, margins = c(25,25), cexRow = 2, cexCol = 2)
-dev.off()
-
-# simplify the visualization 
-# start by changing variable type
-doc.topics <- as.data.frame(doc.topics)
-
-# create a variable that contains the groups (i.e. the books)
-groups_tmp <- rownames(doc.topics)
-groups_tmp <- strsplit(groups_tmp, "_")
-groups_tmp <- sapply(groups_tmp, function(x) paste(x[1:3], collapse = "_"))
-
-# add it to the dataframe
-doc.topics$group <- groups_tmp
-
-# calculate mean for each topic probability per group
-doc.topics.simple <- doc.topics %>% 
-  group_by(group) %>%
-  summarise(across(everything(), mean))
-
-# re-convert the format to matrix
-groups_tmp <- doc.topics.simple$group
-doc.topics.simple$group <- NULL
-doc.topics.simple <- as.matrix(doc.topics.simple)
-rownames(doc.topics.simple) <- groups_tmp
-
-# visualize another heatmap and save it to a file
-png(filename = "heatmap_simple.png", width = 1000, height = 1000)
-heatmap(doc.topics.simple, margins = c(25,25), cexRow = 2, cexCol = 2)
 dev.off()
 
 ### 4.
