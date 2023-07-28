@@ -22,17 +22,21 @@ library(irr)
 all_tables <- list.files(path = "Machine_Learning_Files", pattern = "Group", full.names = T)
 
 # divide them into the two groups
-tablesA <- all_tables[which(grepl("A", all_tables))]
-tablesB <- all_tables[which(grepl("B", all_tables))]
+tablesA <- all_tables[which(grepl("GroupA", all_tables))]
+tablesB <- all_tables[which(grepl("GroupB", all_tables))]
 
 # iterate on all files to build just two tables
 df_A <- data.frame()
 df_B <- data.frame()
 for(i in 1:length(tablesA)){
   
+  print(tablesA[i])
+  
   df_A_tmp <- read.csv(tablesA[i], stringsAsFactors = F)
   df_A_tmp$annotator <- gsub("Machine_Learning_Files/GroupA_|.csv", "", tablesA[i])
   df_A <- rbind(df_A, df_A_tmp)
+  
+  print(tablesB[i])
   
   df_B_tmp <- read.csv(tablesB[i], stringsAsFactors = F)
   df_B_tmp$annotator <- gsub("Machine_Learning_Files/GroupB_|.csv", "", tablesB[i])
