@@ -94,17 +94,29 @@ stats %>%
 ### Word trends
 
 # define words to check
-words_to_check <- c("man", "tea")
+words_to_check <- c("man", "woman")
 
 # add year information to dataset
 year_tmp <- strsplit(texts_annotated$document, "_")
 texts_annotated$year <- as.numeric(sapply(year_tmp, function(x) x[3]))
 
-# plot frequency per year
+# add author to dataset
+auth_tmp <- strsplit(texts_annotated$document, "_")
+texts_annotated$author <- sapply(auth_tmp, function(x) x[1])
+
+# plot frequency per year and author
 texts_annotated %>%
-  group_by(year) %>%
+  group_by(year, author) %>%
   summarise(count = sum(token %in% words_to_check)) %>%
   ggplot(mapping = aes(year, count)) +
   geom_line() +
+  facet_wrap(~ author, scales = "free", nrow = 2) +
   ggtitle(paste("Occurrences of", paste(words_to_check, collapse = " and ")))
 
+# plot frequency per year and author (in one graph)
+texts_annotated %>%
+  group_by(year, author) %>%
+  summarise(count = sum(token %in% words_to_check)) %>%
+  ggplot(mapping = aes(year, count, color = author)) +
+  geom_line() +
+  ggtitle(paste("Occurrences of", paste(words_to_check, collapse = " and ")))
