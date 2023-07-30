@@ -1,0 +1,15 @@
+id,label,country,role,lat,lng
+001c,Rome,Italy,city,41.89414308,12.49307223
+002c,Florence,Italy,city,43.77621845,11.25504161
+003c,Paris,France,city,48.86358095 ,2.338131193
+004c,Edinburgh,Scotland,city,55.95060885,55.95060885
+005c,London,England,city,51.51378154,-0.124979086
+006c,Prague,Czech Republic,city,50.0935165,14.40107022
+007c,Venice,Italy,city,45.44179165,12.33922884
+008c,Brisbane,Australia,city,-27.43466517,153.0259711
+009c,Kyoto,Japan,city,35.04954543,135.7188243
+010c,Rio de Janeiro,Brazil,city,-22.921474274989013,-43.20845057
+011c,San Sebastién,Spain,city,43.35648637,-1.982197354
+012c,Seville,Spain,city,37.38762646,-5.991109883
+013c,Sydney,Australia,city,-33.84108339,151.2175773 
+014c,Vancouver,Canada,city,49.27765269,-123.1033069

@@ -1,0 +1,14 @@
+id,label,number,value,group
+1,Antwerp,3,1,A
+2,Haarlem,3,68,B
+3,Dordrecht,3,5,B
+4,Venice,3,1,A
+5,Lisse,3,2,C
+6,Het Vlie,3,1,A
+7,Hamburg,3,1,C
+8,Emden,3,2,A
+9,Amsterdam,3,26,A
+10,Delft,3,1,B
+11,The Hague,3,1,A
+12,Middelburg,3,1,B
+13,Bremen,3,1,B
