@@ -34,6 +34,7 @@ cat("The cat is", "on the table", "sleeping", sep = " happy ")
 # "The cat is with Simone on the table with Simone sleeping"
 # you can complete the code here below:
 cat("The cat is", "on the table", "sleeping", sep = "")
+# tip: just modify the "sep" section
 
 ### Your Turn (1) - end
 
@@ -205,28 +206,7 @@ for(i in 1:10){
 ### Your Turn (6) - end
 
 
-### 7. Functions
-
-# basic (stupid) example
-my_function <- function(x){
-  cat("Ciao", x)
-}
-
-my_function("Simone")
-my_function("Giovanni")
-
-### Your Turn (7) - start
-
-# create a function that takes as input two names 
-# (e.g. "Simone" and "Giovanni")
-# ...and prints a sentence including those two names
-# (e.g. "Simone is teaching R with Giovanni")
-
-
-### Your Turn (7) - end
-
-
-### 8. Packages
+### 7. Packages
 
 # install (this should be done just once)
 install.packages("tidyverse")
@@ -252,14 +232,14 @@ ggplot(data = data.frame(x = 1:5, my_first_vector), aes(x, my_first_vector)) +
   geom_line(color = "red")
 
 
-### 9. Cheat sheets
+### 8. Cheat sheets
 # good practice when you start coding with R is to use cheat sheets
 # you can download some from here (or just Google them!)
 # https://iqss.github.io/dss-workshops/R/Rintro/base-r-cheat-sheet.pdf
 # https://www.rstudio.com/resources/cheatsheets/
 
 
-### 10. ChatGPT
+### 9. ChatGPT
 # Large Language Models are very good in writing code!
 # You just need to provide clear instructions
 # However, never trust them 100% (especially when task is complex): always test the script!

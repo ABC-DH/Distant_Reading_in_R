@@ -17,6 +17,7 @@
 ## Packages for the first week
 
 install.packages("tidyverse")
+install.packages("reshape2")
 install.packages("udpipe")
 install.packages("word2vec")
 install.packages("mallet")
