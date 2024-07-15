@@ -1,5 +1,8 @@
 ### Welcome!
 
+# A yellow warning might appear above
+# No worries: you can close it for the moment
+
 # This is an R script file, created by Simone
 # Everything written after an hashtag is a comment
 # Everything else is R code
@@ -157,8 +160,20 @@ setwd("/cloud/project")
 my_text <- readLines("corpus/Cbronte_Jane_1847.txt")
 head(my_text)
 
+# note that if you change the working dir, you will get an error
+setwd("/cloud/project/Text_Analysis/")
+my_text <- readLines("corpus/Cbronte_Jane_1847.txt")
+
+# to correct the error, modify the file path
+my_text <- readLines("../corpus/Cbronte_Jane_1847.txt")
+head(my_text)
+
 # collapse all text in a single line (separated by the "newline" character)
 my_text_collapsed <- paste(my_text, collapse = "\n")
+# show its head (by using the "substr" function)
+substr(my_text_collapsed, 1, 100)
+# elegantly print it
+cat(substr(my_text_collapsed, 1, 100))
 
 # write file
 cat("The cat is on the table", file = "Cat.txt")
@@ -167,7 +182,7 @@ cat("The cat is on the table", file = "Cat.txt")
 
 # read another .txt file in the "corpus" folder
 # and split it into single words 
-my_text <- readLines("corpus/")
+my_text <- readLines("../corpus/")
 strsplit()
 
 ### Your Turn (5) - end
@@ -182,7 +197,7 @@ for(i in 1:10){
 
 # if conditions
 for(i in 1:10){
-  if(i == 1){
+  if(i <= 2){
     print(i)
   }
 }
@@ -199,8 +214,7 @@ for(i in 1:10){
 ### Your Turn (6) - start
 
 # write a loop that prints numbers until 4, then prints "more than four"
-# tip: copy paste here below the "more than one" loop and modify it
-
+# tip: use as a model the two loops above
 
 
 ### Your Turn (6) - end
@@ -236,7 +250,7 @@ ggplot(data = data.frame(x = 1:5, my_first_vector), aes(x, my_first_vector)) +
 # good practice when you start coding with R is to use cheat sheets
 # you can download some from here (or just Google them!)
 # https://iqss.github.io/dss-workshops/R/Rintro/base-r-cheat-sheet.pdf
-# https://www.rstudio.com/resources/cheatsheets/
+# https://posit.co/resources/cheatsheets/
 
 
 ### 9. ChatGPT
@@ -244,4 +258,3 @@ ggplot(data = data.frame(x = 1:5, my_first_vector), aes(x, my_first_vector)) +
 # You just need to provide clear instructions
 # However, never trust them 100% (especially when task is complex): always test the script!
 # Example: https://chat.openai.com/share/ef0e31ba-9136-40ab-9e78-6c046de48b78
-
