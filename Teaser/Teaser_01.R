@@ -8,12 +8,8 @@
 # ...and press Ctrl+Enter (or Cmd+Enter for Mac)
 # (the command will be automatically copy/pasted into the console)
 
-install.packages("udpipe")
-install.packages("tidyverse")
-install.packages("syuzhet")
-install.packages("mallet")
-install.packages("stylo")
-
+# Some packages might be missing...
+# If a yellow warning appears above, click on "Install"
 
 ### 1. 
 ### Natural language processing
@@ -30,6 +26,7 @@ novel <- readLines('corpus/Doyle_Study_1887.txt')
 text <-  paste(novel, collapse = "\n")
 # annotate it with Udpipe
 result <- udpipe(x = text, object = "english")
+View(result)
 
 ### Dispersion plot
 
@@ -107,6 +104,8 @@ plot(
 
 # ...it is still too noisy: we'll need to use some filters
 simple_plot(syuzhet_vector, title = "Sentiment arc")
+# if you get an error, just extend the area of the graph
+# ...and call again the command
 
 # we can also look at the basic emotions (Plutchik)
 syuzhet_emotions <- get_nrc_sentiment(sentences_vector)
