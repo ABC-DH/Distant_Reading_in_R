@@ -17,9 +17,9 @@ ggplot(cronologia, aes(x = anno,      # Set the x-axis to the 'anno' column
   theme_ridges() +        # Apply the theme_ridges theme for a clean look
   theme(legend.position = "none") # Remove the legend from the plot
 
-###################
-## Explanation: ###
-###################
+                                                          ###################
+                                                          ## Explanation: ###
+                                                          ###################
 
 ## Install necessary packages: The install.packages commands (commented out) suggest installing the required libraries ggridges and ggplot2.
 ## Load libraries: The library commands load the ggridges and ggplot2 packages into the R session.

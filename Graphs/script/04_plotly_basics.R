@@ -51,9 +51,9 @@ plot_ly(x = c(1, 2, 3),
         mode = "lines",
         fill = "tozeroy")
 
-###################
-## Explanation: ##
-##################
+                                    ###################
+                                    ## Explanation: ##
+                                    ##################
 
 ##Install necessary package: The install.packages command (commented out) suggests installing the plotly library.
 
