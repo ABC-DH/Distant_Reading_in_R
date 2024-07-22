@@ -161,36 +161,42 @@ visNetwork(nodes_3, edges_3, height = "500px") %>%
 ## Load libraries: The library commands load the visNetwork and tidyverse packages into the R session.
 
 ## Load data from CSV files: The read_csv function reads data from CSV files and stores them in the nodes and edges variables.
-Simple interactive plot using visNetwork:
-  visNetwork(nodes, edges, width = "100%"): Initializes a visNetwork plot with the nodes and edges data, setting the width to 100%.
-visGroups(groupname = "A", color = "red"): Defines a group "A" with red color.
-visGroups(groupname = "B", color = "lightblue"): Defines a group "B" with light blue color.
-visLegend(width = 0.1, position = "right", main = "Group"): Adds a legend to the plot.
-Interactive plot with customized edge width and layout:
-  visIgraphLayout(layout = "layout_with_fr"): Applies the Fruchterman-Reingold layout.
-visEdges(arrows = "middle"): Adds arrows to the middle of the edges.
-Customizing nodes and edges:
-  Nodes:
-  read.csv("data/nodes_visNetwork_1.csv"): Loads customized node data.
-visNetwork(nodes, edges, ...): Creates a visNetwork plot with the customized nodes.
-Edges:
-  read.csv("data/edges_visNetwork_2.csv"): Loads customized edge data.
-visNetwork(nodes_1, edges_1, ...): Creates a visNetwork plot with the customized edges.
-Creating groups, legends, and titles:
-  Highlight nearest nodes:
-  visOptions(highlightNearest = TRUE): Highlights the nearest nodes.
-visLayout(randomSeed = 123): Sets the layout with a random seed for reproducibility.
-Select by node ID:
-  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE): Enables node ID selection and highlighting.
-Select by a column:
-  visOptions(selectedBy = "group"): Enables selection by the "group" column.
-Customize options for node selection and highlighting:
-  nodesIdSelection = list(...): Customizes the node ID selection options.
-Enable data manipulation features:
-  visOptions(manipulation = TRUE): Enables data manipulation features in the plot.
-Use igraph layout:
-  visIgraphLayout(): Applies an igraph layout to the network.
-visNodes(size = 10): Sets the size of the nodes.
-Use igraph layout with a circular arrangement:
-  visIgraphLayout(layout = "layout_in_circle"): Arranges the network in a circle.
-visOptions(highlightNearest = list(enabled = T, hover = T), nodesIdSelection = T): Enables highlighting nearest nodes and node ID selection with hover functionality.
+
+## Simple interactive plot using visNetwork:
+##   visNetwork(nodes, edges, width = "100%"): Initializes a visNetwork plot with the nodes and edges data, setting the width to 100%.
+## visGroups(groupname = "A", color = "red"): Defines a group "A" with red color.
+## visGroups(groupname = "B", color = "lightblue"): Defines a group "B" with light blue color.
+## visLegend(width = 0.1, position = "right", main = "Group"): Adds a legend to the plot.
+## Interactive plot with customized edge width and layout:
+##   visIgraphLayout(layout = "layout_with_fr"): Applies the Fruchterman-Reingold layout.
+## visEdges(arrows = "middle"): Adds arrows to the middle of the edges.
+
+## Customizing nodes and edges:
+##   Nodes:
+##   read.csv("data/nodes_visNetwork_1.csv"): Loads customized node data.
+## visNetwork(nodes, edges, ...): Creates a visNetwork plot with the customized nodes.
+
+## Edges:
+##   read.csv("data/edges_visNetwork_2.csv"): Loads customized edge data.
+## visNetwork(nodes_1, edges_1, ...): Creates a visNetwork plot with the customized edges.
+## Creating groups, legends, and titles:
+##   Highlight nearest nodes:
+##   visOptions(highlightNearest = TRUE): Highlights the nearest nodes.
+## visLayout(randomSeed = 123): Sets the layout with a random seed for reproducibility.
+
+## Select by node ID:
+##   visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE): Enables node ID selection and highlighting.
+
+## Select by a column:
+##   visOptions(selectedBy = "group"): Enables selection by the "group" column.
+## Customize options for node selection and highlighting:
+##   nodesIdSelection = list(...): Customizes the node ID selection options.
+## Enable data manipulation features:
+##   visOptions(manipulation = TRUE): Enables data manipulation features in the plot.
+
+## Use igraph layout:
+##   visIgraphLayout(): Applies an igraph layout to the network.
+## visNodes(size = 10): Sets the size of the nodes.
+## Use igraph layout with a circular arrangement:
+##   visIgraphLayout(layout = "layout_in_circle"): Arranges the network in a circle.
+## visOptions(highlightNearest = list(enabled = T, hover = T), nodesIdSelection = T): Enables highlighting nearest nodes and node ID selection with hover functionality.
