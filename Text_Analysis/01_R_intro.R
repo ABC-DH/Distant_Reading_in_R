@@ -11,7 +11,10 @@
 # ...and press Ctrl+Enter (or Cmd+Enter for Mac)
 # (the command will be automatically copy/pasted into the console)
 
-### 1. Basic funtions
+# before you start, install the required packages
+# (if a warning is shown above)
+
+### 1. Basic functions
 
 # print something to the screen
 print("Hello world")
@@ -220,40 +223,31 @@ for(i in 1:10){
 ### Your Turn (6) - end
 
 
-### 7. Packages
+### 7. Packages (example: dplyr)
 
-# install (this should be done just once)
-install.packages("tidyverse")
+# install the package (...if you have not done it already)
+# install.packages("dplyr")
 
-# load (this should be done every time you start R!)
-library(tidyverse)
-# more efficient ways to manage dataframes
+# load it (this should be done every time you restart R!)
+library(dplyr)
+# the package offers more efficient ways to manage dataframes
 
 # for example: find the Italian author in our dataframe of authors
-# with base R, you should do like that
+# with base R, you should do like that:
 my_df[which(my_df$nationality == "Italian"),]
 
-# with tidyverse, you do like
+# with dplyr, you do like this:
 my_df %>% filter(nationality == "Italian")
-
-# or: print a nice plot
-# with base R, we did like that
-plot(my_first_vector)
-
-# with tidyverse, you can do
-ggplot(data = data.frame(x = 1:5, my_first_vector), aes(x, my_first_vector)) +
-  geom_point(shape = 5) +
-  geom_line(color = "red")
 
 
 ### 8. Cheat sheets
 # good practice when you start coding with R is to use cheat sheets
 # you can download some from here (or just Google them!)
 # https://iqss.github.io/dss-workshops/R/Rintro/base-r-cheat-sheet.pdf
-# https://posit.co/resources/cheatsheets/
+# https://rstudio.github.io/cheatsheets/contributed-cheatsheets.html
 
 
-### 9. ChatGPT
+### 9. LLMs
 # Large Language Models are very good in writing code!
 # You just need to provide clear instructions
 # However, never trust them 100% (especially when task is complex): always test the script!
