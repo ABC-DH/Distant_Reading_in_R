@@ -225,12 +225,14 @@ for(i in 1:10){
 
 ### 7. Packages (example: dplyr)
 
-# install the package (...if you have not done it already)
+# the package offers more efficient ways to manage dataframes
+# more info: https://dplyr.tidyverse.org/
+
+# install the package (...if you have not done it yet)
 # install.packages("dplyr")
 
 # load it (this should be done every time you restart R!)
 library(dplyr)
-# the package offers more efficient ways to manage dataframes
 
 # for example: find the Italian author in our dataframe of authors
 # with base R, you should do like that:
