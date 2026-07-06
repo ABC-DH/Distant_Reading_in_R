@@ -11,9 +11,6 @@
 # ...and press Ctrl+Enter (or Cmd+Enter for Mac)
 # (the command will be automatically copy/pasted into the console)
 
-# before you start, install the required packages
-# (if a warning is shown above)
-
 ### 1. Basic functions
 
 # print something to the screen
@@ -229,7 +226,7 @@ for(i in 1:10){
 # more info: https://dplyr.tidyverse.org/
 
 # install the package (...if you have not done it yet)
-# install.packages("dplyr")
+install.packages("dplyr")
 
 # load it (this should be done every time you restart R!)
 library(dplyr)
