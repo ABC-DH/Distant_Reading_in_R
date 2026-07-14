@@ -1,131 +1,136 @@
-####################
-## igraph package ##
-####################
+###############################################################################
+# INSTALL THE REQUIRED PACKAGES
+###############################################################################
 
-# Load necessary libraries for network analysis and data manipulation
-library(igraph)
-library(tidyverse)
+# Install igraph, the package used to create, analyse
+# and visualize network objects.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("igraph")
 
-# Load data from CSV files
+# Install tidyverse, a collection of packages used for importing
+# and manipulating data.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("tidyverse")
+
+
+###############################################################################
+# LOAD THE REQUIRED LIBRARIES
+###############################################################################
+
+library(igraph)     # Creates, analyses and visualizes network objects.
+library(tidyverse)  # Imports and manipulates data; here it provides read_csv().
+
+
+###############################################################################
+# IMPORT THE NETWORK DATA
+###############################################################################
+
+# Read the nodes.csv file and store the node information in nodes.
 nodes <- read_csv("data/nodes.csv")
+
+# Read the edges.csv file and store the relationships in edges.
 edges <- read_csv("data/edges.csv")
 
-# Create an igraph object
-routes_igraph <- graph_from_data_frame(d = edges, 
-                                       vertices = nodes, 
-                                       directed = TRUE)
 
-# Print igraph object to the console
-routes_igraph
+###############################################################################
+# CREATE THE NETWORK OBJECT
+###############################################################################
 
-# Plot the igraph object with basic settings
-plot(routes_igraph, 
-     edge.arrow.size = 0.2)  # Set the size of the arrows on the edges
-
-# Plot the igraph object with additional customizations
-plot(routes_igraph,
-     # Nodes options
-     vertex.shape = "square",               # Set the shape of the vertices to square
-     vertex.color = "red",                  # Set the color of the vertices to red
-     vertex.size = 10 + sqrt(nodes$value),  # Set the size of the vertices based on the 'value' attribute
-     vertex.frame.color = "gray",           # Set the color of the vertex frames to gray
-     vertex.label.color = "black",          # Set the color of the vertex labels to black
-     vertex.label.cex = 0.8,                # Set the size of the vertex labels
-     vertex.label.dist = 2,                 # Set the distance of the vertex labels from the vertices
-     # Edges options
-     edge.width = sqrt(nodes$value),        # Set the width of the edges based on the 'value' attribute
-     edge.curved = 0.5,                     # Curve the edges
-     edge.arrow.size = 0.2,                 # Set the size of the arrows on the edges
-     # Layout options
-     #layout = layout_with_kk               # Use the Kamada-Kawai layout (commented out)
-     #layout = layout_with_fr               # Use the Fruchterman-Reingold layout (commented out)
-     #layout = layout_randomly              # Use a random layout (commented out)
-     layout = layout_in_circle              # Arrange vertices in a circle
-     #layout = layout.fruchterman.reingold  # Use the Fruchterman-Reingold layout (commented out)
+# Create an igraph object from the edge list.
+routes_igraph <- graph_from_data_frame(
+  d = edges,            # Use edges to define the relationships.
+  vertices = nodes,     # Add node attributes from nodes.csv.
+  directed = TRUE       # Create a directed network.
 )
 
-# Other graph layouts:
-#add_layout_(), component_wise(), layout_as_bipartite(), layout_as_star(), 
-#layout_as_tree(), layout_in_circle(), layout_nicely(), layout_on_grid(), 
-#layout_on_sphere(), layout_randomly(), layout_with_dh(), layout_with_fr(), 
-#layout_with_gem(), layout_with_graphopt(), layout_with_kk(), layout_with_lgl(), 
-#layout_with_sugiyama(), layout_(), merge_coords(), norm_coords(), normalize()
 
-                                                                      ###################
-                                                                      ## Explanation: ##
-                                                                      #################
+###############################################################################
+# INSPECT THE NETWORK
+###############################################################################
 
-## Load necessary libraries: The library commands load the igraph package for network analysis and the tidyverse package for data manipulation.
-## Load data from CSV files: The read_csv function reads data from CSV files and stores them in the nodes and edges variables.
+# Print a summary of the network object.
+routes_igraph
 
-## Create an igraph object:
-## graph_from_data_frame: Creates an igraph object from the edges data.
-## d = edges: Specifies the edges dataframe.
-## vertices = nodes: Adds attributes to the nodes from the nodes dataframe.
-## directed = TRUE: Specifies that the graph is directed.
 
-## Print igraph object: Displays the igraph object in the console to inspect its properties.
+###############################################################################
+# GRAPH LAYOUTS
+###############################################################################
 
-## Plot the igraph object with basic settings:
-## plot(routes_igraph): Plots the network with the following options:
-## edge.arrow.size = 0.2: Sets the size of the arrows on the edges.
+# A layout determines how the nodes are positioned in the graph.
+#
+# Different layouts display the same network in different ways.
+# Only the position of the nodes changes.
+# The relationships remain exactly the same.
+#
+# Some of the most common layouts are:
+#
+# layout_in_circle
+# Arranges all nodes around a circle.
+#
+# layout_with_kk
+# Places strongly connected nodes closer together
+# using the Kamada-Kawai algorithm.
+#
+# layout_with_fr
+# Uses the Fruchterman-Reingold force-directed algorithm.
+#
+# layout_randomly
+# Places the nodes randomly.
+#
+# layout_as_tree
+# Displays the network as a hierarchical tree.
+#
+# layout_on_grid
+# Places the nodes on a regular grid.
+#
+# layout_on_sphere
+# Places the nodes on the surface of a sphere.
+#
+# layout_nicely
+# Automatically selects an appropriate layout.
+#
+# There is no "best" layout.
+# Different layouts highlight different characteristics
+# of the same network.
 
-## Plot the igraph object with additional customizations:
-## plot(routes_igraph): Plots the network with additional customization for nodes, edges, and layout:
-## Nodes options:
-## vertex.shape = "square": Sets the shape of the vertices to square.
-## vertex.color = "red": Sets the color of the vertices to red.
-## vertex.size = 10 + sqrt(nodes$value): Sets the size of the vertices based on the 'value' attribute.
-## vertex.frame.color = "gray": Sets the color of the vertex frames to gray.
-## vertex.label.color = "black": Sets the color of the vertex labels to black.
-## vertex.label.cex = 0.8: Sets the size of the vertex labels.
-## vertex.label.dist = 2: Sets the distance of the vertex labels from the vertices.
 
-## Edges options:
-## edge.width = sqrt(nodes$value): Sets the width of the edges based on the 'value' attribute.
-## edge.curved = 0.5: Curves the edges.
-## edge.arrow.size = 0.2: Sets the size of the arrows on the edges.
+###############################################################################
+# PLOT THE NETWORK WITH DEFAULT SETTINGS
+###############################################################################
 
-## Layout options:
-## layout = layout_in_circle: Arranges vertices in a circle.
+# Create a basic network visualization.
+plot(
+  routes_igraph,          # Use the previously created network object.
+  edge.arrow.size = 0.2   # Set the size of the arrows.
+)
 
-## Commented out alternative layout options (layout_with_kk, layout_with_fr, layout_randomly).
-## Other graph layouts: Comments list other layout functions available in igraph for creating different network visualizations.Explanation:
 
-##   Load necessary libraries: The library commands load the igraph package for network analysis and the tidyverse package for data manipulation.
+###############################################################################
+# PLOT THE NETWORK WITH CUSTOM SETTINGS
+###############################################################################
 
-## Load data from CSV files: The read_csv function reads data from CSV files and stores them in the nodes and edges variables.
-
-## Create an igraph object:
-##   graph_from_data_frame: Creates an igraph object from the edges data.
-## d = edges: Specifies the edges dataframe.
-## vertices = nodes: Adds attributes to the nodes from the nodes dataframe.
-## directed = TRUE: Specifies that the graph is directed.
-
-## Print igraph object: Displays the igraph object in the console to inspect its properties.
-
-## Plot the igraph object with basic settings:
-##   plot(routes_igraph): Plots the network with the following options:
-##   edge.arrow.size = 0.2: Sets the size of the arrows on the edges.
-
-## Plot the igraph object with additional customizations:
-##   plot(routes_igraph): Plots the network with additional customization for nodes, edges, and layout:
-##   Nodes options:
-##   vertex.shape = "square": Sets the shape of the vertices to square.
-##   vertex.color = "red": Sets the color of the vertices to red.
-##   vertex.size = 10 + sqrt(nodes$value): Sets the size of the vertices based on the 'value' attribute.
-##   vertex.frame.color = "gray": Sets the color of the vertex frames to gray.
-##   vertex.label.color = "black": Sets the color of the vertex labels to black.
-##   vertex.label.cex = 0.8: Sets the size of the vertex labels.
-##   vertex.label.dist = 2: Sets the distance of the vertex labels from the vertices.
-
-## Edges options:
-##   edge.width = sqrt(nodes$value): Sets the width of the edges based on the 'value' attribute.
-##   edge.curved = 0.5: Curves the edges.
-##   edge.arrow.size = 0.2: Sets the size of the arrows on the edges.
-
-## Layout options:
-##   layout = layout_in_circle: Arranges vertices in a circle.
-
-## Commented out alternative layout options (layout_with_kk, layout_with_fr, layout_randomly).
-## Other graph layouts: Comments list other layout functions available in igraph for creating different network visualizations.
+# Create a customized network visualization.
+plot(routes_igraph, # Use the previously created network object.
+     # Node options
+     vertex.shape = "square",                     # Set the node shape.
+     vertex.color = "red",                        # Set the node colour.
+     vertex.size = 10 + sqrt(nodes$value),        # Set the node size.
+     vertex.frame.color = "gray",                 # Set the node border colour.
+     vertex.label.color = "black",                # Set the label colour.
+     vertex.label.cex = 0.8,                      # Set the label size.
+     vertex.label.dist = 2,                       # Set the distance between nodes and labels.
+    # Edge options
+    edge.width = sqrt(nodes$value),              # Set the edge width.
+    edge.curved = 0.5,                           # Curve the edges.
+    edge.arrow.size = 0.2,                       # Set the arrow size.
+    # Layout options
+    layout = layout_in_circle                    # Arrange the nodes around a circle.
+)
+  # Alternative layouts:
+  # layout = layout_with_kk
+  # layout = layout_with_fr
+  # layout = layout_randomly
+  # layout = layout_as_tree
+  # layout = layout_on_grid
+  # layout = layout_on_sphere
+  # layout = layout_nicely

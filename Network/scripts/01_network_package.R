@@ -1,64 +1,179 @@
-#####################
-## network package ##
-#####################
+###############################################################################
+# INSTALL THE REQUIRED PACKAGES
+###############################################################################
 
-# Load necessary libraries for network analysis and data manipulation
-library(network)
-library(tidyverse)
+# Install network, the package used to create and analyse network objects.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("network")
 
-# Load data from CSV files
+# Install sna, a package that provides additional tools
+# and layouts for network analysis.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("sna")
+
+# Install tidyverse, a collection of packages used for importing
+# and manipulating data.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("tidyverse")
+
+
+###############################################################################
+# LOAD THE REQUIRED LIBRARIES
+###############################################################################
+
+library(network)    # Creates and visualizes network objects.
+library(sna)        # Provides network analysis functions and graph layouts.
+library(tidyverse)  # Imports and manipulates data; here it provides read_csv().
+
+
+###############################################################################
+# IMPORT THE NETWORK DATA
+###############################################################################
+
+# Read the nodes.csv file and store the node information in nodes.
 nodes <- read_csv("data/nodes.csv")
+
+# Read the edges.csv file and store the relationships in edges.
 edges <- read_csv("data/edges.csv")
 
-# Create a network object
-routes_network <- network(edges, 
-                          vertex.attr = nodes, # Add attributes to the nodes
-                          matrix.type = "edgelist", # Specify that the edges are given as an edge list
-                          ignore.eval = FALSE) # Include edge values
 
-# Print network object to the console
+###############################################################################
+# CREATE THE NETWORK OBJECT
+###############################################################################
+
+# Create a network object from the edge list.
+routes_network <- network(
+  edges,                       # Use edges to define the connections.
+  vertex.attr = nodes,         # Add node attributes from nodes.csv.
+  matrix.type = "edgelist",    # Specify that the data is stored as an edge list.
+  ignore.eval = FALSE          # Keep additional edge values, if available.
+)
+
+
+###############################################################################
+# INSPECT THE NETWORK
+###############################################################################
+
+# Print a summary of the network object.
 routes_network
 
-# Plot the network with default layout
-plot(routes_network, 
-     vertex.cex = "number", # Set vertex size based on the 'number' attribute
-     displaylabels = TRUE)  # Display labels for each vertex
 
-# Plot the network in a circle layout
-plot(routes_network,
-     label = network.vertex.names(routes_network), # Display vertex names as labels
-     vertex.cex = sqrt(nodes$value), # Set vertex size based on the square root of the 'value' attribute
-     mode = "circle", # Arrange vertices in a circle
-     #mode = "kamadakawai", # Alternative layout option (commented out)
-     #mode = "fruchtermanreingold", # Another alternative layout option (commented out)
-     displaylabels = TRUE)  # Display labels for each vertex
+###############################################################################
+# NETWORK LAYOUTS
+###############################################################################
 
-                                                                        ###################
-                                                                        ## Explanation: ##
-                                                                        ##################
+# A layout determines how the nodes are positioned in the graph.
+#
+# Different layouts display the same network in different ways.
+# Only the position of the nodes changes.
+# The relationships remain exactly the same.
+#
+# Some of the most common layouts are:
+#
+# circle
+# Arranges all nodes around a circle.
+# Useful for displaying hierarchical or cyclic structures.
+#
+# kamadakawai
+# Places strongly connected nodes closer together.
+# Produces compact and easy-to-read networks.
+#
+# fruchtermanreingold
+# Uses a force-directed algorithm.
+# One of the most popular layouts for exploring network structure.
+#
+# random
+# Places the nodes randomly.
+# Mainly useful for comparison or testing.
+#
+# mds (Multidimensional Scaling)
+# Positions nodes according to their similarities or distances.
+# Often used in social network analysis.
+#
+# geodist
+# Positions nodes according to their geodesic (shortest path) distances.
+#
+# target
+# Places one selected node at the centre of the graph,
+# highlighting its relationships with the other nodes.
+#
+# eigen
+# Positions nodes according to the eigenvectors of the network.
+# Useful for highlighting the overall structure.
+#
+# There is no "best" layout.
+# Different layouts highlight different characteristics
+# of the same network.
 
-## Load necessary libraries: The library commands load the network package for network analysis and the tidyverse package for data manipulation.
 
-## Load data from CSV files: The read_csv function reads data from CSV files and stores them in the nodes and edges variables.
+###############################################################################
+# PREPARE THE GRAPH
+###############################################################################
 
-## Create a network object:
-##  network: Creates a network object from the edges data.
-##  vertex.attr = nodes: Adds attributes to the nodes from the nodes data.
-##  matrix.type = "edgelist": Specifies that the edges data is given as an edge list.
-##  ignore.eval = FALSE: Includes edge values in the network.
+# Create proportional node sizes.
+# The square root reduces large differences between node sizes.
+node_size <- 1 + 2 * sqrt(nodes$value / max(nodes$value))
 
-## Print network object: Displays the network object in the console to inspect its properties.
+# Reduce the margins around the graph.
+par(mar = c(1, 1, 1, 1))
 
-## Plot the network:
-##   plot(routes_network): Plots the network with the following options:
-##   vertex.cex = "number": Sets the vertex size based on the 'number' attribute.
-## displaylabels = TRUE: Displays labels for each vertex.
 
-## Plot the network in a circle layout:
-##   plot(routes_network): Plots the network with the following options:
-##   label = network.vertex.names(routes_network): Uses vertex names as labels.
-## vertex.cex = sqrt(nodes$value): Sets the vertex size based on the square root of the 'value' attribute.
-## mode = "circle": Arranges vertices in a circle.
-#mode = "kamadakawai": Alternative layout option (commented out).
-#mode = "fruchtermanreingold": Another alternative layout option (commented out).
-## displaylabels = TRUE: Displays labels for each vertex.
+###############################################################################
+# PLOT THE NETWORK WITH THE DEFAULT LAYOUT
+###############################################################################
+
+# Create a basic network visualization.
+plot(
+  routes_network,           # Use the previously created network object.
+  vertex.cex = node_size,   # Set the node size.
+  displaylabels = TRUE      # Display the node names.
+)
+
+
+###############################################################################
+# PLOT THE NETWORK WITH A CIRCULAR LAYOUT
+###############################################################################
+
+# Create a network visualization using a circular layout.
+plot(
+  routes_network,                                # Use the network object.
+  label = network.vertex.names(routes_network),  # Display the node names.
+  vertex.cex = node_size,                        # Set the node size.
+  label.cex = 0.8,                               # Set the label size.
+  mode = "circle",                               # Arrange the nodes around a circle.
+  pad = 1.5,                                     # Leave space around the graph.
+  displaylabels = TRUE                           # Display the node labels.
+)
+
+
+###############################################################################
+# PLOT THE NETWORK WITH THE KAMADA-KAWAI LAYOUT
+###############################################################################
+
+# Create a network visualization using the Kamada-Kawai layout.
+plot(
+  routes_network,                                # Use the network object.
+  label = network.vertex.names(routes_network),  # Display the node names.
+  vertex.cex = node_size,                        # Set the node size.
+  label.cex = 0.8,                               # Set the label size.
+  mode = "kamadakawai",                          # Place connected nodes closer together.
+  pad = 1.5,                                     # Leave space around the graph.
+  displaylabels = TRUE                           # Display the node labels.
+)
+
+
+###############################################################################
+# PLOT THE NETWORK WITH THE FRUCHTERMAN-REINGOLD LAYOUT
+###############################################################################
+
+# Create a network visualization using the Fruchterman-Reingold layout.
+plot(
+  routes_network,                                # Use the network object.
+  label = network.vertex.names(routes_network),  # Display the node names.
+  vertex.cex = node_size,                        # Set the node size.
+  label.cex = 0.8,                               # Set the label size.
+  mode = "fruchtermanreingold",                  # Apply a force-directed layout.
+  pad = 1.5,                                     # Leave space around the graph.
+  displaylabels = TRUE                           # Display the node labels.
+)
+
