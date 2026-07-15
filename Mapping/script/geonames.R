@@ -1,111 +1,163 @@
-# Install required packages for the project
+###############################################################################
+# INSTALL THE REQUIRED PACKAGES
+###############################################################################
+
+# Install geonames, the package used to query the GeoNames geographical database.
+# This command only needs to be run once and is therefore commented out.
 # install.packages("geonames")
+
+# Install tidyverse, a collection of packages used for importing,
+# filtering and manipulating data.
+# This command only needs to be run once and is therefore commented out.
 # install.packages("tidyverse")
+
+# Install plyr, used here to combine data frames with different columns.
+# This command only needs to be run once and is therefore commented out.
 # install.packages("plyr")
 
-# Set the options to your username in geonames
-options(geonamesUsername="geonames_user")
 
-# To create a geonames username please visit https://www.geonames.org/login and create a new user account
+###############################################################################
+# SET THE GEONAMES USERNAME
+###############################################################################
 
-# Load the required libraries
-library(geonames)
-library(tidyverse)
-library(plyr)
+# Enter the username associated with your GeoNames account.
+# Create a free account at: https://www.geonames.org/login
+options(geonamesUsername = "geonames_user")
 
-# Search for a specific place (Verona) and save the result in a variable
-Verona <- GNsearch(name_equals = "Verona")
 
-# Visualize the variable in a viewer
+###############################################################################
+# LOAD THE REQUIRED LIBRARIES
+###############################################################################
+
+library(geonames)  # Searches the GeoNames geographical database.
+library(tidyverse) # Imports, filters and manipulates data.
+library(plyr)      # Combines data frames that do not have exactly the same columns.
+
+
+###############################################################################
+# TEST A SINGLE GEOGRAPHICAL SEARCH
+###############################################################################
+
+# Search for places whose name is exactly "Verona".
+Verona <- GNsearch(
+  name_equals = "Verona"  # Search for an exact place name.
+)
+
+# Open the GeoNames results in the RStudio data viewer.
 View(Verona)
 
-# Read a list of places from a CSV file and save it as a dataframe
-my_places_df <- read.csv("data/csv/places.csv", stringsAsFactors = F)
-# Display the 'label' column from the dataframe
+
+###############################################################################
+# IMPORT THE LIST OF PLACES
+###############################################################################
+
+# Read the places.csv file and store it in my_places_df.
+my_places_df <- read.csv(
+  "data/csv/places.csv",
+  stringsAsFactors = FALSE  # Keep textual columns as character strings.
+)
+
+# Display the place names stored in the label column.
 my_places_df$label
 
-# Create an empty dataframe to store geonames results
+
+###############################################################################
+# CREATE AN EMPTY RESULTS TABLE
+###############################################################################
+
+# Create an empty data frame that will contain the final GeoNames results.
 my_geonames <- data.frame()
 
-# Loop through all places in the dataframe
-for(i in 1:length(my_places_df$id)){
+
+###############################################################################
+# SEARCH ALL PLACES WITH GEONAMES
+###############################################################################
+
+# Repeat the geographical search for every row of my_places_df.
+for (i in seq_len(nrow(my_places_df))) {
   
+  # Display the number of the current iteration.
   print(i)
-  # Prepare a temporary dataframe for the current place
-  tmp_df <- my_places_df[i,]
-  # Search for the place using geonames API
-  result_tmp <- GNsearch(name_equals = my_places_df$label[i])
-  # Check if the search returned any results
-  if(length(result_tmp) == 0){
-    # If no results, bind the temporary dataframe to the final dataframe and continue to the next iteration
-    my_geonames <- rbind.fill(my_geonames, tmp_df)
+  
+  # Copy the current place into a temporary data frame.
+  tmp_df <- my_places_df[i, ]
+  
+  # Search GeoNames for the place written in the label column.
+  result_tmp <- GNsearch(
+    name_equals = my_places_df$label[i]
+  )
+  
+  # Check whether GeoNames returned no results.
+  if (nrow(result_tmp) == 0) {
+    
+    # Keep the original place even when no geographical result is found.
+    my_geonames <- rbind.fill(
+      my_geonames,
+      tmp_df
+    )
+    
+    # Continue directly with the next place.
     next
   }
-  # Filter the results to include only cities, villages, etc.
-  result_tmp <- result_tmp %>% filter(fclName == "city, village,...")
-  # Select the city with the largest population
-  result_tmp <- result_tmp %>% filter(population == max(as.numeric(population)))
-  # Check if there are still results after filtering
-  if((length(result_tmp$adminCode1) > 0))
-    # Combine the temporary dataframe with the search results
-    tmp_df <- cbind(tmp_df, result_tmp)
-  # Gradually bind the combined result to the final dataframe
-  my_geonames <- rbind.fill(my_geonames, tmp_df)
-  # Pause for 0.5 seconds to avoid overwhelming the API
-  Sys.sleep(0.5)
   
+  # Keep only populated places such as cities, towns and villages.
+  result_tmp <- result_tmp %>%
+    filter(fclName == "city, village,...")
+  
+  # Check whether any populated places remain after filtering.
+  if (nrow(result_tmp) == 0) {
+    
+    # Keep the original place without adding GeoNames information.
+    my_geonames <- rbind.fill(
+      my_geonames,
+      tmp_df
+    )
+    
+    # Continue directly with the next place.
+    next
+  }
+  
+  # Convert population values into numbers.
+  result_tmp$population <- as.numeric(result_tmp$population)
+  
+  # Keep the result with the largest population.
+  # This generally selects the most important place when names are ambiguous.
+  result_tmp <- result_tmp %>%
+    filter(population == max(population, na.rm = TRUE)) %>%
+    slice(1)  # Keep only one result if several places have the same population.
+  
+  # Combine the original place information with the GeoNames result.
+  tmp_df <- cbind(
+    tmp_df,
+    result_tmp
+  )
+  
+  # Add the completed row to the final data frame.
+  my_geonames <- rbind.fill(
+    my_geonames,
+    tmp_df
+  )
+  
+  # Pause briefly between requests to avoid sending too many calls to the API.
+  Sys.sleep(0.5)
 }
 
-# Visualize the final dataframe with all geonames results
+
+###############################################################################
+# INSPECT THE RESULTS
+###############################################################################
+
+# Open the completed data frame in the RStudio data viewer.
 View(my_geonames)
 
-# Save the results to a CSV file
-write.csv(my_geonames, "data/csv/places_geo.csv")
 
-##################
-## Explanation: ##
-#################
+###############################################################################
+# SAVE THE RESULTS
+###############################################################################
 
-##  Install required packages: The install.packages commands (commented out) suggest installing the required libraries.
-
-## Set geonames username: The options command sets the geonames username for API access.
-
-## Load libraries: The library commands load the required packages into the R session.
-
-## Search for a specific place: The GNsearch function searches for "Verona" using the geonames API and saves the result in the Verona variable.
-
-## Visualize the variable: The View function opens a viewer to inspect the contents of the Verona variable.
-
-## Read list of places: The read.csv function reads a CSV file containing a list of places and stores it in the my_places_df dataframe.
-
-## Display 'label' column: The my_places_df$label command displays the 'label' column from the dataframe.
-
-## Create empty dataframe: An empty dataframe my_geonames is created to store the geonames results.
-
-## Loop through places: A for loop iterates over each place in my_places_df.
-
-## Print index: The print(i) command prints the current iteration index.
-
-## Prepare temporary dataframe: A temporary dataframe tmp_df is created for the current place.
-
-## Search for place: The GNsearch function searches for the current place using the geonames API.
-
-## Check for results: An if statement checks if the search returned any results.
-
-## No results: If no results, the temporary dataframe is added to the final dataframe, and the loop continues to the next iteration.
-
-## Filter results: The filter function selects only cities, villages, etc., from the search results.
-
-## Select largest city: The filter function selects the city with the largest population.
-
-## Check for remaining results: An if statement checks if there are still results after filtering.
-
-## Combine dataframes: The cbind function combines the temporary dataframe with the filtered search results.
-
-## Bind results: The rbind.fill function adds the combined result to the final dataframe.
-
-## Pause for API: The Sys.sleep(0.5) command pauses the loop for 0.5 seconds to avoid overwhelming the geonames API.
-
-## Visualize final dataframe: The View function opens a viewer to inspect the contents of the final dataframe my_geonames.
-
-## Save results: The write.csv function saves the final dataframe to a CSV file.
+# Save the enriched geographical data as a new CSV file.
+write.csv(
+  my_geonames,
+  "data/csv/places_geo.csv",
+  row.names = FALSE  # Do not add an additional row-number column.
+)

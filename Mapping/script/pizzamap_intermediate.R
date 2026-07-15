@@ -1,221 +1,332 @@
-## Install necessary packages for the project
-##install.packages("leaflet")
-##install.packages("sp")
-##install.packages("sf")
-##install.packages("RColorBrewer")
-##install.packages("leaflet.extras")
-##install.packages("leaflet.minicharts")
-##install.packages("htmlwidgets")
-##install.packages("raster")
-##install.packages("mapview")
-##install.packages("leafem")
-##install.packages("leafpop")
-##install.packages("htmltools")
+###############################################################################
+# INSTALL THE REQUIRED PACKAGES
+###############################################################################
 
-## Call the libraries needed for the project
-library(leaflet)
-library(sp)
-library(sf)
-library(RColorBrewer)
-library(leaflet.extras)
-library(leaflet.minicharts)
-library(htmlwidgets)
-library(raster)
-library(mapview)
-library(leafem)
-library(leafpop)
-library(htmltools)
+# Install leaflet, the package used to create interactive maps.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("leaflet")
 
-## PART 1 - IN THIS PART THE CODE READS THE FILES AND ATTRIBUTES COLORS AND ICONS TO ELEMENTS
+# Install sf, the package used to read and manage geographical vector data.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("sf")
 
-## Read the shapefile containing country polygons
-countries <- st_read('data/shp/countries/countries-polygon.shp')
+# Install leaflet.extras, which adds controls such as the reset button
+# and the minimap.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("leaflet.extras")
 
-## Create a color palette for the shapefile data based on the number of pizzerias
-palette_countries <- colorNumeric(palette = "YlOrRd", domain = countries$number)
+# Install leafem, which adds tools such as the coordinate display.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("leafem")
 
-## Read the CSV file containing pizzeria data
-data <- read.csv("data/csv/pizzamap.csv")
 
-## Create HTML popup content for the pizzeria markers
-content <- paste(sep = "<br/>",
-                 paste0("<div class='leaflet-popup-scrolled' style='max-width:200px;max-height:200px'>"),
-                 paste0("<b>", data$name, "</b>", " in ", data$city, " (", data$country, ")"),
-                 paste0("They have ","<b>", data$pizzas, "</b>", " pizzas", " and ", "<b>", data$places_circa, "</b>", " places"),
-                 paste0(data$image),
-                 paste0("<small>", "Takeaway: ", "<b>", data$take_away, "</b>", "</small>"),
-                 paste0("</div>"))
+###############################################################################
+# LOAD THE REQUIRED LIBRARIES
+###############################################################################
 
-## Create a color palette for the pizzeria data based on the average price of pizzas
-palette_data <- colorNumeric("YlGn", data$price_euro_average)
+library(leaflet)         # Creates interactive maps and map layers.
+library(sf)              # Reads and manages geographical vector data.
+library(leaflet.extras)  # Adds extra controls such as reset and minimap tools.
+library(leafem)          # Adds extra map elements such as mouse coordinates.
 
-## Create an icon for pizzerias using an image link
-url <- "http://miam-images.m.i.pic.centerblog.net/o/b0cb1d85.png"
-pizza_icon <- makeIcon(url, url, 40, 40)
 
-## PART 2 - IN THIS PART THE CODE ADDS ELEMENTS ON THE MAP LIKE POLYGONS, POINTS AND IMAGES.
+###############################################################################
+# PART 1 — IMPORT AND PREPARE THE DATA
+###############################################################################
 
-## Initialize the leaflet map
+# Read the shapefile containing country polygons.
+countries <- st_read(
+  "data/shp/countries/countries-polygon.shp"  # Define the shapefile path.
+)
+
+# Convert the country polygons to the coordinate system used by Leaflet.
+countries <- st_transform(
+  countries,  # Use the imported country polygons.
+  crs = 4326  # Convert the data to the standard GPS coordinate system.
+)
+
+# Read the CSV file containing the pizzeria data.
+data <- read.csv(
+  "data/csv/pizzamap.csv",  # Define the CSV file path.
+  stringsAsFactors = FALSE  # Keep text columns as character strings.
+)
+
+# Display the column names to verify the structure of the datasets.
+names(countries)  # Show the country dataset columns.
+names(data)       # Show the pizzeria dataset columns.
+
+
+###############################################################################
+# CREATE THE COLOUR PALETTES
+###############################################################################
+
+# Create a colour scale based on the number of pizzerias in each country.
+palette_countries <- colorNumeric(
+  palette = "YlOrRd",         # Use a yellow-to-red colour scale.
+  domain = countries$number,  # Associate colours with pizzeria counts.
+  na.color = "transparent"    # Make countries without data transparent.
+)
+
+# Create a colour scale based on the average pizza price.
+palette_data <- colorNumeric(
+  palette = "YlGn",                  # Use a yellow-to-green colour scale.
+  domain = data$price_euro_average,  # Associate colours with average prices.
+  na.color = "transparent"           # Make missing values transparent.
+)
+
+
+###############################################################################
+# CREATE THE PIZZERIA POPUPS
+###############################################################################
+
+# Create the HTML text displayed when a pizzeria marker is selected.
+data$popup <- paste0(
+  "<div class='leaflet-popup-scrolled' style='max-width:250px; max-height:250px;'>",
+  "<b>", data$name, "</b>",                                           # Display the pizzeria name.
+  " in ", data$city, " (", data$country, ")<br><br>",                # Display the city and country.
+  "Number of pizzas: <b>", data$pizzas, "</b><br>",                   # Display the number of pizzas.
+  "Approximate number of seats: <b>", data$places_circa, "</b><br>", # Display the approximate number of seats.
+  data$image, "<br>",                                                 # Display the image stored in the dataset.
+  "<small>Takeaway: <b>", data$take_away, "</b></small>",             # Display takeaway information.
+  "</div>"
+)
+
+
+###############################################################################
+# CREATE THE PIZZA ICON
+###############################################################################
+
+# Define the web address of the image used as a pizzeria marker.
+pizza_icon_url <- "http://miam-images.m.i.pic.centerblog.net/o/b0cb1d85.png"
+
+# Create a Leaflet icon using the image.
+pizza_icon <- makeIcon(
+  iconUrl = pizza_icon_url,  # Use the image as the marker icon.
+  iconWidth = 40,            # Set the icon width.
+  iconHeight = 40            # Set the icon height.
+)
+
+
+###############################################################################
+# PART 2 — CREATE THE INTERACTIVE MAP
+###############################################################################
+
+# Initialize the Leaflet map.
 map <- leaflet() %>%
-  ## Add the base map layer using CartoDB Positron tiles
-  ##addTiles(tile)        %>%
-  addProviderTiles(providers$CartoDB.Positron)  %>%
   
-  ## Add a zoom reset button
+  # Add the OpenStreetMap base map.
+  addProviderTiles(
+    providers$OpenStreetMap,  # Use OpenStreetMap tiles.
+    group = "OpenStreetMap"   # Add the tiles to this base group.
+  ) %>%
+  
+  # Add the CartoDB Positron base map.
+  addProviderTiles(
+    providers$CartoDB.Positron,  # Use a light CartoDB background.
+    group = "CartoDB"            # Add the tiles to this base group.
+  ) %>%
+  
+  # Add the Esri satellite base map.
+  addProviderTiles(
+    providers$Esri.WorldImagery,  # Use satellite imagery.
+    group = "Satellite"           # Add the tiles to this base group.
+  ) %>%
+  
+  # Add a button that restores the initial map view.
   addResetMapButton() %>%
-  ## Add a minimap to better navigate the map
-  addMiniMap() %>%
-  ## Add coordinates reader
+  
+  # Add a small overview map.
+  addMiniMap(
+    position = "bottomleft"  # Place the minimap in the bottom-left corner.
+  ) %>%
+  
+  # Display geographical coordinates under the mouse pointer.
   leafem::addMouseCoordinates() %>%
-  ## Set the initial view of the map (center and zoom level)
-  setView(lng = 60.27444399596726, 
-          lat = 27.808314896631217, 
-          zoom = 2 ) %>%
   
-  ## Add country polygons with specified colors and options
-  addPolygons(data = countries,
-              fillColor = ~palette_countries(countries$number),
-              weight = 0.1,
-              color = "brown",
-              dashArray = "3",
-              opacity = 0.7,
-              stroke = TRUE,
-              fillOpacity = 0.5,
-              smoothFactor = 0.5,
-              group = "Countries",
-              label = ~paste("In", COUNTRY, "there are", number, " pizzerias", sep = " "),
-              highlightOptions = highlightOptions(
-                weight = 0.6,
-                color = "#666",
-                dashArray = "",
-                fillOpacity = 0.7,
-                bringToFront = TRUE)) %>%
+  # Set the initial centre and zoom level of the map.
+  setView(
+    lng = 60.27444399596726,   # Set the centre longitude.
+    lat = 27.808314896631217,  # Set the centre latitude.
+    zoom = 2                   # Set the initial zoom level.
+  ) %>%
   
-  ## Add a legend for the country polygons
-  addLegend("bottomleft", 
-            pal = palette_countries, 
-            values = countries$number,
-            title = "Pizzerias by country:",
-            labFormat = labelFormat(suffix = " pizzerias"),
-            opacity = 1,
-            group = "Countries") %>%
-  
-  ## Add markers for pizzerias with clustering options
-  addAwesomeMarkers(data = data, 
-                    lng = ~lng,
-                    lat = ~lat, 
-                    popup = c(content), 
-                    group = "Pizzerias",
-                    options = popupOptions(maxWidth = 100, maxHeight = 150), 
-                    clusterOptions = markerClusterOptions()) %>%
-  
-  ## Add circle markers for pizzerias based on price with quantitative options
-  addCircleMarkers(data = data, 
-                   lng = data$lng,
-                   lat = data$lat,
-                   fillColor = ~palette_data(price_euro_average),
-                   color = "black",
-                   weight = 1,
-                   radius = ~sqrt(data$price_euro_average) * 3,
-                   stroke = TRUE,
-                   fillOpacity = 0.5,
-                   group = "By price",
-                   label = ~paste("In the pizzeria ", data$name, 
-                                  " pizza costs approximately ",
-                                  data$price_euro_average, 
-                                  " euros")) %>%
-  
-  ## Add a legend for the price-based circle markers
-  addLegend("bottomleft", 
-            pal = palette_data, 
-            values = data$price_euro_average,
-            title = "Pizzerias ordered by prices:",
-            labFormat = labelFormat(suffix = " euros"),
-            opacity = 1,
-            group = "By price") %>%
-  
-  ## Add markers with special pizza icons
-  addMarkers(data = data,
-             lng = ~lng, 
-             lat = ~lat, 
-             icon = pizza_icon,
-             group = "Pizza Marker",
-             popup = ~paste0(name)) %>%
-  
-  ## Add a legend with the credits
-  addLegend("topright", 
-            colors = c("transparent"),
-            labels=c("Giovanni Pietro Vitali - giovannipietrovitali@gmail.com"),
-            title="Pizza Map (Learn R to make maps): ") %>%
-  
-  ## PART 3 - IN THIS PART THE CODE MANAGES THE LAYERS' SELECTOR
-  
-  ## Add the layer selector for navigating map options
-  addLayersControl(baseGroups = c("Pizzerias",
-                                  "Empty layer"),
-                   overlayGroups = c("Countries",
-                                     "By price",
-                                     "Pizza Marker"),
-                   options = layersControlOptions(collapsed = TRUE)) %>%
-  
-  ## Hide the layers that users can choose to display
-  hideGroup(c("Empty",
-              "Countries",
-              "By price",
-              "Pizza Marker"))
+  ###########################################################################
+# ADD THE COUNTRY POLYGONS
+###########################################################################
 
-## Show the map  
+# Represent countries using colours based on the number of pizzerias.
+addPolygons(
+  data = countries,                       # Use the country polygons.
+  fillColor = ~palette_countries(number), # Colour polygons according to pizzeria counts.
+  weight = 0.5,                           # Set the polygon border width.
+  color = "brown",                        # Set the polygon border colour.
+  dashArray = "3",                        # Draw dashed polygon borders.
+  opacity = 0.7,                          # Set the border opacity.
+  stroke = TRUE,                          # Draw the polygon borders.
+  fillOpacity = 0.5,                      # Set the polygon fill transparency.
+  smoothFactor = 0.5,                     # Simplify polygon geometry while zooming.
+  group = "Countries",                    # Add polygons to the Countries layer.
+  label = ~paste(
+    "In", COUNTRY,                        # Display the country name.
+    "there are", number,                  # Display the number of pizzerias.
+    "pizzerias"
+  ),
+  highlightOptions = highlightOptions(
+    weight = 2,                           # Increase the border width on hover.
+    color = "#666",                       # Change the border colour on hover.
+    dashArray = "",                       # Remove the dashed border on hover.
+    fillOpacity = 0.7,                    # Increase fill opacity on hover.
+    bringToFront = TRUE                   # Bring the selected polygon to the front.
+  )
+) %>%
+  
+  # Add a legend for the number of pizzerias by country.
+  addLegend(
+    position = "bottomleft",         # Place the legend in the bottom-left corner.
+    pal = palette_countries,         # Use the country colour palette.
+    values = countries$number,       # Use pizzeria counts as legend values.
+    title = "Pizzerias by country",  # Add a legend title.
+    labFormat = labelFormat(
+      suffix = " pizzerias"          # Add the unit after each legend value.
+    ),
+    opacity = 1,                     # Make the legend fully opaque.
+    group = "Countries"              # Associate the legend with the Countries layer.
+  ) %>%
+  
+  ###########################################################################
+# ADD THE PIZZERIA MARKERS
+###########################################################################
+
+# Add clustered markers for each pizzeria.
+addAwesomeMarkers(
+  data = data,                            # Use the pizzeria dataset.
+  lng = ~lng,                             # Use lng as longitude.
+  lat = ~lat,                             # Use lat as latitude.
+  popup = ~popup,                         # Display the prepared HTML popup.
+  group = "Pizzerias",                    # Add markers to the Pizzerias layer.
+  options = popupOptions(
+    maxWidth = 300,                       # Set the maximum popup width.
+    maxHeight = 250                       # Set the maximum popup height.
+  ),
+  clusterOptions = markerClusterOptions() # Group nearby markers automatically.
+) %>%
+  
+  ###########################################################################
+# ADD PRICE-BASED CIRCLE MARKERS
+###########################################################################
+
+# Represent pizzerias using circles based on the average pizza price.
+addCircleMarkers(
+  data = data,                                    # Use the pizzeria dataset.
+  lng = ~lng,                                     # Use lng as longitude.
+  lat = ~lat,                                     # Use lat as latitude.
+  fillColor = ~palette_data(price_euro_average),  # Colour circles according to price.
+  color = "black",                                # Set the circle border colour.
+  weight = 1,                                     # Set the circle border width.
+  radius = ~sqrt(price_euro_average) * 3,         # Size circles according to price.
+  stroke = TRUE,                                  # Draw the circle borders.
+  fillOpacity = 0.5,                              # Set the circle transparency.
+  group = "By price",                             # Add circles to the By price layer.
+  label = ~paste(
+    "At", name,                                   # Display the pizzeria name.
+    "a pizza costs approximately",
+    price_euro_average,                           # Display the average price.
+    "euros"
+  )
+) %>%
+  
+  # Add a legend for the average pizza price.
+  addLegend(
+    position = "bottomleft",           # Place the legend in the bottom-left corner.
+    pal = palette_data,                # Use the price colour palette.
+    values = data$price_euro_average,  # Use average prices as legend values.
+    title = "Average pizza price",     # Add a legend title.
+    labFormat = labelFormat(
+      suffix = " euros"                # Add the currency after each value.
+    ),
+    opacity = 1,                       # Make the legend fully opaque.
+    group = "By price"                 # Associate the legend with the By price layer.
+  ) %>%
+  
+  ###########################################################################
+# ADD CUSTOM PIZZA ICONS
+###########################################################################
+
+# Add a second representation using custom pizza icons.
+addMarkers(
+  data = data,                          # Use the pizzeria dataset.
+  lng = ~lng,                           # Use lng as longitude.
+  lat = ~lat,                           # Use lat as latitude.
+  icon = pizza_icon,                    # Use the custom pizza icon.
+  group = "Pizza markers",              # Add icons to the Pizza markers layer.
+  popup = ~paste0("<b>", name, "</b>")  # Display the pizzeria name in bold.
+) %>%
+  
+  ###########################################################################
+# ADD THE MAP INFORMATION BOX
+###########################################################################
+
+# Add a custom information box containing the map title and author.
+addControl(
+  html = HTML("
+      <div style='
+        background: rgba(255,255,255,.95);
+        padding: 12px;
+        border-radius: 10px;
+        font-family: Arial;
+        font-size: 13px;
+        line-height: 1.4;
+        box-shadow: 0 2px 10px rgba(0,0,0,.25);
+      '>
+        <h4 style='margin:0;'>🍕 Pizza Map</h4>
+        <div style='font-size:11px; color:#666;'>
+          Learn R with Leaflet
+        </div>
+        <hr style='margin:8px 0;'>
+        <b>Author</b><br>
+        Giovanni Pietro Vitali<br>
+        UVSQ – Paris-Saclay
+      </div>
+    "),                            # Define the HTML content and style.
+  position = "topright"          # Place the information box at the top right.
+) %>%
+  
+  ###########################################################################
+# PART 3 — MANAGE THE MAP LAYERS
+###########################################################################
+
+# Add controls allowing users to select one base map
+# and activate or deactivate overlay layers.
+addLayersControl(
+  baseGroups = c(
+    "OpenStreetMap",  # Add the OpenStreetMap base map.
+    "CartoDB",        # Add the CartoDB base map.
+    "Satellite"       # Add the satellite base map.
+  ),
+  overlayGroups = c(
+    "Pizzerias",      # Add the pizzeria marker layer.
+    "Countries",      # Add the country polygon layer.
+    "By price",       # Add the price circle layer.
+    "Pizza markers"   # Add the custom icon layer.
+  ),
+  options = layersControlOptions(
+    collapsed = TRUE  # Keep the layer menu closed initially.
+  )
+) %>%
+  
+  # Hide optional overlay layers when the map first opens.
+  hideGroup(
+    c(
+      "Countries",      # Hide the country polygon layer.
+      "By price",       # Hide the price circle layer.
+      "Pizza markers"   # Hide the custom icon layer.
+    )
+  )
+
+
+###############################################################################
+# DISPLAY THE MAP
+###############################################################################
+
+# Display the completed interactive map.
 map
-
-                                                ##################
-                                                ## Explanation: ##
-                                                ##################
-
-## Install necessary packages: The install.packages commands (commented out) suggest installing the required libraries.
-
-## Load libraries: The library commands load these packages into the R session.
-
-## Load the shapefile: The st_read function reads a shapefile containing country polygons and stores it in the variable countries.
-
-## Create color palette for shapefile data: colorNumeric creates a color palette for the country data based on the number of pizzerias.
-
-## Read the CSV file: The read.csv function reads data from a CSV file containing pizzeria information and stores it in the data variable.
-
-## Create HTML popup content: The paste function creates HTML content for the pizzeria markers' popups.
-
-## Create color palette for pizzeria data: colorNumeric creates a color palette for the pizzeria data based on the average price of pizzas.
-
-## Create pizza icon: The makeIcon function creates an icon for the pizzerias using an image link.
-
-## Initialize the map: The leaflet function initializes a leaflet map.
-
-## Add base map layer: addProviderTiles adds a base map layer from CartoDB Positron.
-
-## Add zoom reset button: addResetMapButton adds a button to reset the zoom level of the map.
-
-## Add minimap: addMiniMap adds a smaller overview map to the main map.
-
-## Add coordinates reader: leafem::addMouseCoordinates adds a coordinates reader to the map.
-
-## Set initial view: setView sets the initial center (longitude and latitude) and zoom level of the map.
-
-## Add country polygons: addPolygons adds country polygons with specified colors, weights, and options.
-
-## Add legend for country polygons: addLegend adds a legend to the bottom left corner for the country polygons.
-
-## Add pizzeria markers: addAwesomeMarkers adds markers for each pizzeria with clustering options.
-
-## Add circle markers based on price: addCircleMarkers adds circle markers for pizzerias based on price with quantitative options.
-
-## Add legend for price-based circle markers: addLegend adds a legend to the bottom left corner for the price-based circle markers.
-
-## Add markers with pizza icons: addMarkers adds markers with special pizza icons.
-
-## Add legend with credits: addLegend adds a custom legend with credits to the top right corner of the map.
-
-## Manage layers' selector: addLayersControl adds a layer selector for navigating map options.
-
-## Hide selectable layers: hideGroup hides certain layers that users can choose to display.
-
-## Render the map: map renders the map with all the specified layers and controls.
-

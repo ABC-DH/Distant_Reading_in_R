@@ -1,99 +1,146 @@
-## Install necessary packages for the project
-##install.packages("leaflet")
-##install.packages("sp")
-##install.packages("sf")
+###############################################################################
+# INSTALL THE REQUIRED PACKAGES
+###############################################################################
 
-# Load the required libraries for mapping and spatial data manipulation
-library(leaflet)
-library(sp)
-library(sf)
+# Install leaflet, the package used to create interactive maps.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("leaflet")
 
-# Load the shapefile and name it 'countries'
-countries <- st_read('data/shp/countries/countries-polygon.shp')
+# Install leaflet.extras, which adds additional tools
+# such as the minimap.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("leaflet.extras")
 
-# Read the CSV file containing pizzeria data
-data <- read.csv("data/csv/pizzamap.csv")
+# Install sf, the package used to read and manage spatial data.
+# This command only needs to be run once and is therefore commented out.
+# install.packages("sf")
 
-# Initialize the leaflet map with the shapefile data
-map <- leaflet(countries) %>% 
-  ## Add the base map layer
-  ##addTiles() %>%
-  ## Example of a base map using OpenStreetMap tiles
-  addProviderTiles(providers$OpenStreetMap)  %>% 
-  
-  ## Another example of a base map using Stamen Toner tiles (commented out)
-  ##addProviderTiles(providers$Stamen.Toner)  %>% 
-  
-  ## Set the initial view of the map (center and zoom level)
-  setView(lng = 60.27444399596726, 
-          lat = 27.808314896631217, 
-          zoom = 2 ) %>%
-  
-  ## Add markers for each pizzeria using the latitude and longitude columns from the CSV
-  addMarkers(data = data,
-             lng = ~lng, 
-             lat = ~lat,
-             group = "Pizzerias",
-             popup = ~paste("<b>", name, "</b>" ,"<br>", "<br>",
-                            "City:", "<b>", city,"</b>", " in" , "<b>", country, "</b>", "<br>",
-                            "Open on:", "<b>", date, "</b>", "</b>","<br>",
-                            "You can find here ", "<b>", pizzas, "</b>", " pizzas","<br>",
-                            "The special pizza is the:", "<b>", pizza_special, "</b>", "<br>",
-                            "Take away:", "<b>", take_away, "</b>", "<br>",
-                            "They sell other things?", "<b>", other_stuff, "</b>",
-                            sep = " ")) %>%
-  
-  ## Add a polygon layer representing countries with a label
-  addPolygons(data = countries, 
-              color = "#008000", 
-              weight = 1, 
-              smoothFactor = 0,
-              group = "Countries",
-              label = ~paste(countries$COUNTRY, ": ", countries$number, " pizzerias")) %>%
-  
-  ## Add a legend to the top right of the map with custom colors and labels
-  addLegend("topright", 
-            colors = c("transparent"), 
-            labels = c("Giovanni Pietro Vitali - giovannipietrovitali@gmail.com"),
-            title = "Pizza Map (Learn R to make maps):") %>%
-  
-  ## Add a mini map to the bottom left corner of the main map
-  addMiniMap("bottomleft") %>%
-  
-  ## Add layer control allowing users to toggle between overlay groups
-  addLayersControl(overlayGroups = c("Pizzerias", "Countries"),
-                   options = layersControlOptions(collapsed = TRUE))
 
-## Render the map
+###############################################################################
+# LOAD THE REQUIRED LIBRARIES
+###############################################################################
+
+library(leaflet)         # Creates interactive maps.
+library(leaflet.extras)  # Adds extra tools such as the minimap.
+library(sf)              # Reads and manages geographical vector data.
+
+
+###############################################################################
+# IMPORT THE SPATIAL DATA
+###############################################################################
+
+# Read the shapefile containing the country polygons.
+countries <- st_read(
+  "data/shp/countries/countries-polygon.shp"
+)
+
+# Read the CSV file containing the pizzeria information.
+data <- read.csv(
+  "data/csv/pizzamap.csv",
+  stringsAsFactors = FALSE
+)
+
+
+###############################################################################
+# INSPECT THE IMPORTED DATA
+###############################################################################
+
+# Display the column names of the pizzeria dataset.
+# This helps verify that the names used below are correct.
+names(data)
+
+# Display the column names of the country shapefile.
+names(countries)
+
+
+###############################################################################
+# CREATE THE POPUP TEXT
+###############################################################################
+
+# Create the HTML text displayed when a pizzeria marker is selected.
+data$popup <- paste0(
+  "<b>", data$name, "</b><br><br>",
+  "City: <b>", data$city, "</b> in <b>", data$country, "</b><br>",
+  "Open on: <b>", data$date, "</b><br>",
+  "Number of pizzas: <b>", data$pizzas, "</b><br>",
+  "Special pizza: <b>", data$pizza_special, "</b><br>",
+  "Take away: <b>", data$take_away, "</b><br>",
+  "Other products: <b>", data$other_stuff, "</b>"
+)
+
+
+###############################################################################
+# CREATE THE INTERACTIVE MAP
+###############################################################################
+
+# Create the Leaflet map.
+map <- leaflet() %>%
+  
+  # Add the OpenStreetMap background layer.
+  addProviderTiles(
+    providers$OpenStreetMap
+  ) %>%
+  
+  # Set the initial centre and zoom level of the map.
+  setView(
+    lng = 60.27444399596726,   # Set the centre longitude.
+    lat = 27.808314896631217,  # Set the centre latitude.
+    zoom = 2                   # Set the initial zoom level.
+  ) %>%
+  
+  # Add one marker for each pizzeria.
+  addMarkers(
+    data = data,               # Use the pizzeria dataset.
+    lng = ~lng,                # Use lng as longitude.
+    lat = ~lat,                # Use lat as latitude.
+    group = "Pizzerias",       # Add markers to the Pizzerias group.
+    popup = ~popup             # Display the previously created popup.
+  ) %>%
+  
+  # Add the country polygons.
+  addPolygons(
+    data = countries,          # Use the country shapefile.
+    color = "#008000",         # Set the polygon border colour.
+    weight = 1,                # Set the border width.
+    smoothFactor = 0,          # Preserve the original polygon geometry.
+    fillOpacity = 0.1,         # Make the polygon fill mostly transparent.
+    group = "Countries",       # Add polygons to the Countries group.
+    label = ~paste0(
+      COUNTRY,
+      ": ",
+      number,
+      " pizzerias"
+    )                          # Display the country name and pizzeria count.
+  ) %>%
+  
+  # Add a custom information box.
+  addLegend(
+    position = "topright",     # Place the box in the top-right corner.
+    colors = "transparent",    # Use a transparent legend symbol.
+    labels = "Giovanni Pietro Vitali - giovannipietrovitali@gmail.com",
+    title = "Pizza Map (Learn R to make maps)"
+  ) %>%
+  
+  # Add a small overview map in the bottom-left corner.
+  addMiniMap(
+    position = "bottomleft"
+  ) %>%
+  
+  # Add controls that allow users to show or hide map layers.
+  addLayersControl(
+    overlayGroups = c(
+      "Pizzerias",
+      "Countries"
+    ),
+    options = layersControlOptions(
+      collapsed = TRUE        # Keep the layer menu closed by default.
+    )
+  )
+
+
+###############################################################################
+# DISPLAY THE MAP
+###############################################################################
+
+# Display the completed interactive map.
 map
-
-
-                                                ##################
-                                                ## Explanation: ##
-                                                ##################
-
-##  Install necessary packages: The install.packages commands (commented out) suggest installing the required libraries leaflet, sp, and sf.
-
-## Load libraries: The library commands load these packages into the R session, enabling their functionalities.
-
-## Load the shapefile: The st_read function from the sf package reads a shapefile containing country polygons and stores it in the variable countries.
-
-## Read the CSV file: The read.csv function reads data from a CSV file containing pizzeria information and stores it in the data variable.
-
-## Initialize the map: The leaflet function initializes a leaflet map using the countries data.
-
-## Add base map layer: addProviderTiles adds a base map layer from OpenStreetMap. The other commented out options show alternative base map providers.
-
-## Set initial view: setView sets the initial center (longitude and latitude) and zoom level of the map.
-
-## Add pizzeria markers: addMarkers adds markers for each pizzeria with popups containing details from the CSV file.
-
-## Add country polygons: addPolygons adds country polygons with a specified color, weight, and labels indicating the number of pizzerias.
-
-## Add a legend: addLegend adds a custom legend to the top right corner of the map.
-
-## Add a mini map: addMiniMap adds a smaller overview map to the bottom left corner.
-
-## Add layer control: addLayersControl adds controls to toggle visibility of different map layers.
-
-## Render the map: Finally, map renders the map with all the specified layers and controls.
