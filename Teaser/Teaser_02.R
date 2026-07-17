@@ -10,6 +10,7 @@ install.packages("tidyverse")
 install.packages("leaflet")
 install.packages("leaflet.extras")
 install.packages("sf")
+install.packages("igraph")
 
 
 ###############################################################################
